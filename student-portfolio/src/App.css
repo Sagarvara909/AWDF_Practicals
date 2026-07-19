@@ -10,10 +10,29 @@ body {
   color: #333;
 }
 
-div[style] {
+.app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+.app.light {
+  background-color: #ffffff;
+  color: #333;
+}
+
+.app.dark {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+.app.dark section {
+  color: #f9fafb;
+}
+
+.app.dark p,
+.app.dark li {
+  color: #d1d5db;
 }
 
 header {
