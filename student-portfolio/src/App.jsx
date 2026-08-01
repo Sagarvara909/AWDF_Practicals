@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { Link, Route, Routes } from 'react-router-dom'
-import Header from './components/Header'
-import Footer from './components/Footer'
-import Home from './components/Home'
-import Projects from './components/Projects'
-import Contact from './components/Contact'
-import NotFound from './components/NotFound'
+import Header from './pages/Header'
+import Footer from './pages/Footer'
+import Home from './pages/Home'
+import Projects from './pages/Projects'
+import Contact from './pages/Contact'
+import Task from './pages/task'
+import NotFound from './pages/NotFound'
 import './App.css'
 
 function App() {
@@ -36,27 +37,39 @@ function App() {
   ]
 
   return (
-    <div className={isDarkMode ? 'app dark' : 'app light'} style={{ fontFamily: 'Arial, sans-serif' }}>
-      <Header name={studentName} themeColor={isDarkMode ? '#2c3e50' : '#4CAF50'} />
+    <div className={isDarkMode ? 'app dark' : 'app light'}>
+      <Header name={studentName} themeColor={isDarkMode ? '#08039d' : '#4CAF50'} />
 
-      <nav style={{ backgroundColor: isDarkMode ? '#1f2937' : '#f1f1f1', padding: '12px 20px', display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
-        <Link to="/" style={{ color: isDarkMode ? '#fff' : '#333', textDecoration: 'none', fontWeight: 'bold' }}>Home</Link>
-        <Link to="/projects" style={{ color: isDarkMode ? '#fff' : '#333', textDecoration: 'none', fontWeight: 'bold' }}>Projects</Link>
-        <Link to="/contact" style={{ color: isDarkMode ? '#fff' : '#333', textDecoration: 'none', fontWeight: 'bold' }}>Contact</Link>
-        <button
-          onClick={() => setIsDarkMode((prev) => !prev)}
-          style={{ border: 'none', borderRadius: '4px', padding: '6px 10px', cursor: 'pointer', backgroundColor: isDarkMode ? '#f1f1f1' : '#333', color: isDarkMode ? '#333' : '#fff' }}
-        >
+      <nav className="site-nav">
+        <div className="nav-links">
+          <Link to="/" className="nav-link">
+            Home
+          </Link>
+          <Link to="/projects" className="nav-link">
+            Projects
+          </Link>
+          <Link to="/task" className="nav-link">
+            Task Manager
+          </Link>
+          <Link to="/contact" className="nav-link">
+            Contact
+          </Link>
+        </div>
+
+        <button className="theme-btn" onClick={() => setIsDarkMode((prev) => !prev)}>
           {isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
         </button>
       </nav>
 
-      <Routes>
-        <Route path="/" element={<Home skillsList={skillsList} />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <main className="app-main">
+        <Routes>
+          <Route path="/" element={<Home skillsList={skillsList} />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/task" element={<Task />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
 
       <Footer />
     </div>

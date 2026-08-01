@@ -1,0 +1,89 @@
+.certs-section {
+  margin: 1.25rem 0 2rem;
+}
+
+.certs-toolbar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.certs-toggle-btn {
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  background: #111827;
+  color: #ffffff;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.certs-toggle-btn:hover {
+  transform: translateY(-2px);
+  background: #0f172a;
+}
+
+.certs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.cert-card {
+  background: #ffffff;
+  border: 1px solid #e6eefc;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+}
+
+.cert-name {
+  margin: 0 0 0.25rem 0;
+  color: #0f172a;
+  font-size: 0.95rem;
+}
+
+.cert-sub {
+  margin: 0;
+  color: #475569;
+  font-size: 0.85rem;
+}
+
+.cert-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+
+.cert-btn {
+  background: #3b82f6;
+  color: #fff;
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.cert-link {
+  color: #475569;
+  align-self: center;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+@media (max-width: 900px) {
+  .certs-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .certs-grid {
+    grid-template-columns: 1fr;
+  }
+}
