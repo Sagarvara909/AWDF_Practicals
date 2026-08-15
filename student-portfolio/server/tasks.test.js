@@ -1,6 +1,9 @@
+process.env.NODE_ENV = 'test'
+
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createApp } from './server.js'
+
+const { createApp } = await import('./server.js')
 
 async function startServer() {
   const app = createApp()
@@ -12,7 +15,11 @@ async function startServer() {
   })
 
   const address = server.address()
-  const baseUrl = `http://localhost:5000:${address.port}`
+  if (!address || typeof address === 'string') {
+    throw new Error('Server address is not available')
+  }
+
+  const baseUrl = `http://127.0.0.1:${address.port}`
 
   return { server, baseUrl }
 }
