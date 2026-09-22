@@ -86,3 +86,10 @@
     animation: none;
   }
 }
+
+.spinner-wrapper { min-height: 34vh; }
+.spinner-dot:nth-child(1) { border-top-color: var(--coral); }
+.spinner-dot:nth-child(2) { border-right-color: var(--lime); }
+.spinner-dot:nth-child(3) { border-bottom-color: var(--forest); }
+.spinner-label { color: var(--ink-soft); font-family: 'DM Sans', 'Trebuchet MS', sans-serif; }
+.spinner-bracket, .spinner-cursor { color: var(--forest); }

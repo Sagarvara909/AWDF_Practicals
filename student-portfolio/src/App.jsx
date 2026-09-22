@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { clearToken, getCurrentUser, getToken } from './api';
 import Header from './pages/Header';
 import Footer from './pages/Footer';
 import Home from './pages/Home';
@@ -7,11 +8,26 @@ import Projects from './pages/Projects';
 import Contact from './pages/Contact';
 import Task from './pages/task'; // This is your Task Manager page
 import NotFound from './pages/NotFound';
+import Auth from './pages/Auth';
+import Profile from './pages/Profile';
+import Admin from './pages/Admin';
 import './App.css';
 
 function App() {
-  const studentName = 'Sagar Vara';
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!getToken()) {
+      return;
+    }
+
+    getCurrentUser().then(setCurrentUser).catch(() => setCurrentUser(null));
+  }, [location.pathname]);
+
+  const studentName = currentUser?.email || 'Student Portfolio';
 
   const skillsList = [
     'HTML & CSS', 'JavaScript ES6+', 'React & Hooks', 'Vite Build Tool',
@@ -33,11 +49,21 @@ function App() {
           <Link to="/projects" className="nav-link">Projects</Link>
           <Link to="/task" className="nav-link">Task Manager</Link>
           <Link to="/contact" className="nav-link">Contact</Link>
+          {getToken() && <Link to="/profile" className="nav-link">My Profile</Link>}
+          {getToken() && currentUser?.role === 'admin' && <Link to="/admin" className="nav-link">Admin</Link>}
+          {!getToken() && <Link to="/login" className="nav-link">Login</Link>}
         </div>
 
-        <button className="theme-btn" onClick={() => setIsDarkMode((prev) => !prev)}>
-          {isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
-        </button>
+        <div className="nav-actions">
+          {getToken() && (
+            <button className="logout-btn" onClick={() => { clearToken(); navigate('/login'); }}>
+              Logout
+            </button>
+          )}
+          <button className="theme-btn" onClick={() => setIsDarkMode((prev) => !prev)}>
+            {isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+          </button>
+        </div>
       </nav>
 
       <main className="app-main">
@@ -45,6 +71,9 @@ function App() {
           <Route path="/" element={<Home skillsList={skillsList} />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/task" element={<Task />} />
+          <Route path="/login" element={<Auth />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

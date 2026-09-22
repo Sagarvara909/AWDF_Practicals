@@ -1,0 +1,449 @@
+[
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "task-user@example.com",
+    "userId": "6ab27d62e50a35cfb71d1da9",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:42.569Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "task-user@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-09-22T13:06:42.576Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "task-user@example.com",
+    "userId": "6ab27d62e50a35cfb71d1da9",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:42.668Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "userId": "6ab27d62e50a35cfb71d1dad",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:42.777Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-09-22T13:06:42.781Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "userId": "6ab27d62e50a35cfb71d1dad",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:42.858Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "details": "Task: Write report; Status: pending.",
+    "createdAt": "2026-09-22T13:06:42.870Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "charset-task@example.com",
+    "userId": "6ab27d62e50a35cfb71d1db3",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:42.956Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "charset-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-09-22T13:06:42.962Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "charset-task@example.com",
+    "userId": "6ab27d62e50a35cfb71d1db3",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:43.041Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "charset-task@example.com",
+    "details": "Task: Charset request; Status: pending.",
+    "createdAt": "2026-09-22T13:06:43.051Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "owner-task@example.com",
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": "User already exists",
+    "createdAt": "2026-09-22T13:06:43.065Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "owner-task@example.com",
+    "userId": "6ab0fbda4c049413f470d425",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:43.140Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "other-task@example.com",
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": "User already exists",
+    "createdAt": "2026-09-22T13:06:43.149Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "other-task@example.com",
+    "userId": "6ab0fbda4c049413f470d426",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:43.221Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "owner-task@example.com",
+    "details": "Task: Private task; Status: pending.",
+    "createdAt": "2026-09-22T13:06:43.230Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "userId": "6ab27d63e50a35cfb71d1dbf",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:43.322Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-09-22T13:06:43.325Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "userId": "6ab27d63e50a35cfb71d1dbf",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:43.398Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "details": "Task: Draft PR; Status: pending.",
+    "createdAt": "2026-09-22T13:06:43.408Z"
+  },
+  {
+    "event": "task status changed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "details": "Task: Draft PR; Status: pending -> completed.",
+    "createdAt": "2026-09-22T13:06:43.422Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "userId": "6ab27d63e50a35cfb71d1dc6",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:43.503Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-09-22T13:06:43.508Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "userId": "6ab27d63e50a35cfb71d1dc6",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:43.584Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "details": "Task: Build feature; Status: pending.",
+    "createdAt": "2026-09-22T13:06:43.600Z"
+  },
+  {
+    "event": "task status changed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "details": "Task: Build feature; Status: pending -> ongoing.",
+    "createdAt": "2026-09-22T13:06:43.614Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "delete-task@example.com",
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": "User already exists",
+    "createdAt": "2026-09-22T13:06:43.628Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "delete-task@example.com",
+    "userId": "6ab0f2f88c9612a823613ab2",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:43.700Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "delete-task@example.com",
+    "details": "Task: Delete this; Status: pending.",
+    "createdAt": "2026-09-22T13:06:43.709Z"
+  },
+  {
+    "event": "task deleted",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "delete-task@example.com",
+    "details": "Task ID: 6ab27d63e50a35cfb71d1dcf.",
+    "createdAt": "2026-09-22T13:06:43.719Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "invalid-id@example.com",
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": "User already exists",
+    "createdAt": "2026-09-22T13:06:43.736Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "invalid-id@example.com",
+    "userId": "6ab0f2f88c9612a823613ab4",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:43.808Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "auth-user-1790082403823@example.com",
+    "userId": "6ab27d63e50a35cfb71d1dd4",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:43.894Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "auth-user-1790082403823@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-09-22T13:06:43.899Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "login-user@example.com",
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": "User already exists",
+    "createdAt": "2026-09-22T13:06:43.921Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "login-user@example.com",
+    "userId": "6ab0f2f88c9612a823613ab6",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:43.994Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "admin-role@example.com",
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": "User already exists",
+    "createdAt": "2026-09-22T13:06:44.010Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "userId": "6ab10850dd9826addcdfbfb0",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:44.081Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "regular-role@example.com",
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": "User already exists",
+    "createdAt": "2026-09-22T13:06:44.090Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "regular-role@example.com",
+    "userId": "6ab10850dd9826addcdfbfb3",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:44.161Z"
+  },
+  {
+    "event": "oauth_start",
+    "provider": "google",
+    "outcome": "success",
+    "email": null,
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:44.183Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "reset-user@example.com",
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": "User already exists",
+    "createdAt": "2026-09-22T13:06:44.833Z"
+  },
+  {
+    "event": "password_reset_request",
+    "provider": "otp",
+    "outcome": "success",
+    "email": "reset-user@example.com",
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-09-22T13:06:44.843Z"
+  },
+  {
+    "event": "password reset requested",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "reset-user@example.com",
+    "details": "A password reset OTP was requested.",
+    "createdAt": "2026-09-22T13:06:44.847Z"
+  },
+  {
+    "event": "password_reset",
+    "provider": "otp",
+    "outcome": "failure",
+    "email": "reset-user@example.com",
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": "Invalid or expired OTP",
+    "createdAt": "2026-09-22T13:06:44.926Z"
+  }
+]

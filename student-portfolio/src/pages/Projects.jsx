@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./Projects.css";
 import ErrorMessage from "./ErrorMessage";
 import RepoCard from "./RepoCard";
@@ -10,24 +10,26 @@ function Projects() {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [githubId, setGithubId] = useState("sagarvara909");
+  const [activeGithubId, setActiveGithubId] = useState("sagarvara909");
 
-  const githubUsername = "sagarvara909"; // Replace with your GitHub username
+  const defaultGithubId = "sagarvara909";
 
-  const fetchRepos = async ({ signal } = {}) => {
+  const fetchRepos = useCallback(async ({ signal, username = defaultGithubId } = {}) => {
     setLoading(true);
     setError("");
 
     try {
       const response = await fetch(
         // github api end point
-        `https://api.github.com/users/${githubUsername}/repos?per_page=100`,
+        `https://api.github.com/users/${username}/repos?per_page=100`,
         { signal }
       );
 
       if (!response.ok) {
         if (response.status === 404) {
           throw new Error(
-            `GitHub user "${githubUsername}" was not found. Please update the username.`
+            `GitHub user "${username}" was not found. Please check the GitHub ID.`
           );
         }
 
@@ -51,39 +53,38 @@ function Projects() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController()
 
     async function loadRepos() {
-      await fetchRepos({ signal: controller.signal })
+      await fetchRepos({ signal: controller.signal, username: defaultGithubId })
     }
 
     loadRepos()
 
     return () => controller.abort()
-  }, [])
+  }, [fetchRepos])
 
-  // Certificates state and fetch
   const [certs, setCerts] = useState([]);
-  const [certsLoading, setCertsLoading] = useState(false);
+  const [certsLoading, setCertsLoading] = useState(true);
   const [certsError, setCertsError] = useState("");
-  const [showCerts, setShowCerts] = useState(false);
 
-  const fetchCertificates = async () => {
+  const fetchCertificates = async ({ signal, username = activeGithubId } = {}) => {
     setCertsLoading(true);
     setCertsError("");
 
     try {
       const response = await fetch(
-        `https://api.github.com/repos/${githubUsername}/certificates/contents`
+        `https://api.github.com/repos/${username}/certificates/contents`,
+        { signal }
       );
 
       if (!response.ok) {
         if (response.status === 404) {
           throw new Error(
-            `No repository named "certificates" found for ${githubUsername}.`
+            `No repository named "certificates" found for ${username}.`
           );
         }
         throw new Error(`Unable to load certificates. Status: ${response.status}`);
@@ -95,16 +96,36 @@ function Projects() {
         throw new Error("Unexpected response when fetching certificates.");
       }
 
-      // Filter to files only and map needed fields
       const files = data.filter((item) => item.type === "file");
       setCerts(files);
     } catch (err) {
+      if (err.name === "AbortError") return;
       setCertsError(err.message || "Failed to load certificates.");
       setCerts([]);
     } finally {
       setCertsLoading(false);
     }
   };
+
+  async function searchGithub(event) {
+    event.preventDefault();
+    const username = githubId.trim();
+
+    if (!username) {
+      setError("Enter a GitHub ID to search.");
+      return;
+    }
+
+    setActiveGithubId(username);
+    setCerts([]);
+    setCertsError("");
+
+    const controller = new AbortController();
+    await Promise.all([
+      fetchRepos({ signal: controller.signal, username }),
+      fetchCertificates({ signal: controller.signal, username }),
+    ]);
+  }
 
   const filteredRepos = repos;
 
@@ -113,7 +134,7 @@ function Projects() {
   }
 
   if (error) {
-    return <ErrorMessage message={error} onRetry={fetchRepos} />;
+    return <ErrorMessage message={error} onRetry={() => fetchRepos({ username: activeGithubId })} />;
   }
 
   return (
@@ -129,40 +150,47 @@ function Projects() {
         </div>
       </div>
 
-      <div className="certs-toolbar">
-        <button
-          className="certs-toggle-btn"
-          onClick={() => {
-            const next = !showCerts;
-            setShowCerts(next);
-            if (next && certs.length === 0 && !certsLoading) {
-              fetchCertificates();
-            }
-          }}
-        >
-          {showCerts ? "Hide Certificates" : "Load Certificates"}
-        </button>
-      </div>
+      <form className="github-search" onSubmit={searchGithub}>
+        <label htmlFor="github-id">GitHub ID</label>
+        <div className="github-search-row">
+          <input
+            id="github-id"
+            value={githubId}
+            onChange={(event) => setGithubId(event.target.value)}
+            placeholder="Enter a GitHub username"
+            autoComplete="off"
+          />
+          <button type="submit" disabled={loading}>
+            {loading ? "Fetching..." : "Fetch Repositories"}
+          </button>
+        </div>
+        <p>Showing public repositories for @{activeGithubId}</p>
+      </form>
 
-      {showCerts && (
-        <section className="certs-section">
-          {certsLoading ? (
-            <Spinner />
-          ) : certsError ? (
-            <ErrorMessage message={certsError} onRetry={fetchCertificates} />
-          ) : certs.length === 0 ? (
-            <div className="projects-empty-state">
-              <p>No certificates found in the repository.</p>
-            </div>
-          ) : (
-            <div className="certs-grid">
-              {certs.map((file) => (
-                <CertificateCard key={file.sha} file={file} />
-              ))}
-            </div>
-          )}
-        </section>
-      )}
+      <section className="certs-section">
+        <div className="certs-heading">
+          <div>
+            <p className="projects-kicker">Credentials</p>
+            <h3>Certificates</h3>
+          </div>
+          <p className="certs-count">{certs.length} available</p>
+        </div>
+        {certsLoading ? (
+          <Spinner />
+        ) : certsError ? (
+          <ErrorMessage message={certsError} onRetry={fetchCertificates} />
+        ) : certs.length === 0 ? (
+          <div className="projects-empty-state">
+            <p>No certificates found in the repository.</p>
+          </div>
+        ) : (
+          <div className="certs-grid">
+            {certs.map((file) => (
+              <CertificateCard key={file.sha} file={file} />
+            ))}
+          </div>
+        )}
+      </section>
 
       {filteredRepos.length === 0 ? (
         <div className="projects-empty-state">

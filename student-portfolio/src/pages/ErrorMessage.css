@@ -56,3 +56,9 @@
   outline: 2px solid #64ffda;
   outline-offset: 2px;
 }
+
+.error-box { max-width: 560px; padding: 32px 26px; background: var(--surface); border: 1px solid #f4c6b3; border-radius: 18px; box-shadow: var(--shadow-small); }
+.error-icon, .error-title { color: var(--danger); }
+.error-message { color: var(--ink-soft); font-family: 'DM Sans', 'Trebuchet MS', sans-serif; }
+.error-retry-btn { color: var(--forest-deep); background: var(--lime); border: 0; font-family: 'DM Sans', 'Trebuchet MS', sans-serif; font-weight: 700; }
+.error-retry-btn:hover { background: var(--coral); }

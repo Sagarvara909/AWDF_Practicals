@@ -11,6 +11,17 @@
     box-shadow 0.22s ease;
 }
 
+.repo-card { gap: 16px; padding: 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow-small); }
+.repo-card:hover { transform: translateY(-4px); border-color: var(--coral); box-shadow: var(--shadow); }
+.repo-name { color: var(--forest); font-family: 'Space Grotesk', 'Trebuchet MS', sans-serif; }
+.repo-language { color: var(--forest); background: var(--lime-soft); border-color: var(--line); }
+.repo-description { color: var(--ink-soft); font-family: 'DM Sans', 'Trebuchet MS', sans-serif; }
+.repo-stats { color: var(--ink-soft); font-family: 'DM Sans', 'Trebuchet MS', sans-serif; }
+.repo-updated { color: var(--ink-soft); }
+.repo-link-btn { color: var(--forest-deep); background: var(--lime); font-family: 'DM Sans', 'Trebuchet MS', sans-serif; }
+.repo-link-btn:hover { color: var(--forest-deep); background: var(--coral); }
+.repo-link-btn:focus-visible { outline: 3px solid var(--coral); }
+
 .repo-card:hover {
   transform: translateY(-5px);
   border-color: rgba(100, 255, 218, 0.4);
@@ -93,3 +104,12 @@
     margin-left: 0;
   }
 }
+
+.repo-card { gap: 16px; padding: 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow-small); }
+.repo-card:hover { transform: translateY(-4px); border-color: var(--coral); box-shadow: var(--shadow); }
+.repo-name { color: var(--forest); font-family: 'Space Grotesk', 'Trebuchet MS', sans-serif; }
+.repo-language { color: var(--forest); background: var(--lime-soft); border-color: var(--line); }
+.repo-description { color: var(--ink-soft); font-family: 'DM Sans', 'Trebuchet MS', sans-serif; }
+.repo-stats, .repo-updated { color: var(--ink-soft); font-family: 'DM Sans', 'Trebuchet MS', sans-serif; }
+.repo-link-btn { color: var(--forest-deep); background: var(--lime); font-family: 'DM Sans', 'Trebuchet MS', sans-serif; }
+.repo-link-btn:hover { color: var(--forest-deep); background: var(--coral); }

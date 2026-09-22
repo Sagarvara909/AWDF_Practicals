@@ -2,6 +2,22 @@
   margin: 1.25rem 0 2rem;
 }
 
+.cert-card { min-height: 140px; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow-small); }
+.cert-name { color: var(--forest); font-family: 'Space Grotesk', 'Trebuchet MS', sans-serif; }
+.cert-sub { color: var(--ink-soft); }
+.cert-btn { color: var(--forest-deep); background: var(--lime); font-weight: 700; }
+.cert-link { color: var(--forest); font-weight: 600; }
+.app.dark .cert-name { color: var(--lime); }
+
+.cert-card { gap: 14px; }
+.cert-preview { display: grid; place-items: center; height: 112px; overflow: hidden; border-radius: 12px; color: var(--forest); background: linear-gradient(135deg, var(--lime-soft), var(--surface-muted)); }
+.cert-preview img { width: 100%; height: 100%; object-fit: cover; }
+.cert-file-type { padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; color: var(--forest); background: rgba(255, 254, 249, .72); font-size: .75rem; font-weight: 800; letter-spacing: .12em; }
+.cert-actions { margin-top: auto; }
+.cert-btn { display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 11px 14px; border-radius: 11px; color: var(--forest-deep); background: var(--lime); text-decoration: none; font-size: .9rem; font-weight: 800; }
+.cert-btn:hover { background: var(--coral); }
+.app.dark .cert-preview { background: linear-gradient(135deg, #315844, var(--surface-muted)); }
+
 .certs-toolbar {
   display: flex;
   justify-content: center;
@@ -87,3 +103,10 @@
     grid-template-columns: 1fr;
   }
 }
+
+.cert-card { min-height: 140px; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow-small); }
+.cert-name { color: var(--forest); font-family: 'Space Grotesk', 'Trebuchet MS', sans-serif; }
+.cert-sub { color: var(--ink-soft); }
+.cert-btn { color: var(--forest-deep); background: var(--lime); font-weight: 700; }
+.cert-link { color: var(--forest); font-weight: 600; }
+.app.dark .cert-name { color: var(--lime); }
