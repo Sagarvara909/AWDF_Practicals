@@ -1,4 +1,4 @@
-import "./RepoCard.css";
+import "./Repocard.css";
 
 function RepoCard({ repo }) {
   const {

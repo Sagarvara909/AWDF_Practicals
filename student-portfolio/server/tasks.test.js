@@ -69,6 +69,49 @@ test('GET /tasks returns the initial task list', async () => {
   }
 })
 
+test('GET /task-history only returns task events for the signed-in user', async () => {
+  const { server, baseUrl } = await startServer()
+  const ownerToken = await getAuthToken(baseUrl, 'history-owner@example.com')
+  const otherUserToken = await getAuthToken(baseUrl, 'history-other@example.com')
+
+  try {
+    const createResponse = await fetch(`${baseUrl}/tasks`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${ownerToken}` },
+      body: JSON.stringify({ title: 'Report task history', status: 'pending' }),
+    })
+    assert.equal(createResponse.status, 201)
+
+    const updateProfileResponse = await fetch(`${baseUrl}/me`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${ownerToken}` },
+      body: JSON.stringify({ email: 'history-owner-renamed@example.com' }),
+    })
+    assert.equal(updateProfileResponse.status, 200)
+
+    const loginResponse = await fetch(`${baseUrl}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'history-owner-renamed@example.com', password: 'securepass123' }),
+    })
+    const loginBody = await loginResponse.json()
+
+    const ownerResponse = await fetch(`${baseUrl}/task-history`, {
+      headers: { Authorization: `Bearer ${loginBody.token}` },
+    })
+    const ownerBody = await ownerResponse.json()
+    assert.ok(ownerBody.history.some((entry) => entry.event === 'task created' && entry.details.includes('Report task history')))
+
+    const otherResponse = await fetch(`${baseUrl}/task-history`, {
+      headers: { Authorization: `Bearer ${otherUserToken}` },
+    })
+    const otherBody = await otherResponse.json()
+    assert.deepEqual(otherBody.history, [])
+  } finally {
+    await new Promise((resolve) => server.close(resolve))
+  }
+})
+
 test('POST /tasks creates a new task', async () => {
   const { server, baseUrl } = await startServer()
   const token = await getAuthToken(baseUrl, 'write-task@example.com')
@@ -88,6 +131,8 @@ test('POST /tasks creates a new task', async () => {
     const body = await response.json()
     assert.equal(body.task.title, 'Write report')
     assert.equal(body.task.status, 'pending')
+    assert.ok(body.task.createdAt)
+    assert.ok(body.task.updatedAt)
   } finally {
     await new Promise((resolve) => server.close(resolve))
   }
@@ -358,6 +403,87 @@ test('admin users can manage users while regular users only access their own pro
     const profileBody = await profileResponse.json()
     assert.equal(profileBody.user.email, 'regular-role@example.com')
     assert.equal(profileBody.user.role, 'user')
+  } finally {
+    await new Promise((resolve) => server.close(resolve))
+  }
+})
+
+test('admin authentication logs require an admin JWT', async () => {
+  const { server, baseUrl } = await startServer()
+
+  try {
+    const adminToken = await getAuthToken(baseUrl, 'admin-role@example.com', 'securepass123')
+    const userToken = await getAuthToken(baseUrl, 'regular-role@example.com', 'securepass123')
+
+    const anonymousResponse = await fetch(`${baseUrl}/admin/auth-logs`)
+    assert.equal(anonymousResponse.status, 401)
+
+    const userResponse = await fetch(`${baseUrl}/admin/auth-logs`, {
+      headers: { Authorization: `Bearer ${userToken}` },
+    })
+    assert.equal(userResponse.status, 403)
+
+    const adminResponse = await fetch(`${baseUrl}/admin/auth-logs`, {
+      headers: { Authorization: `Bearer ${adminToken}` },
+    })
+    assert.equal(adminResponse.status, 200)
+    const body = await adminResponse.json()
+    assert.ok(Array.isArray(body.logs))
+    assert.ok(body.logs.every((log) => !('password' in log) && !('resetOtpHash' in log)))
+  } finally {
+    await new Promise((resolve) => server.close(resolve))
+  }
+})
+
+test('admin can read one selected users tasks while regular and anonymous requests are rejected', async () => {
+  const { server, baseUrl } = await startServer()
+
+  try {
+    const adminToken = await getAuthToken(baseUrl, 'admin-role@example.com', 'securepass123')
+    const firstUserToken = await getAuthToken(baseUrl, 'all-tasks-first@example.com')
+    const secondUserToken = await getAuthToken(baseUrl, 'all-tasks-second@example.com')
+
+    const firstTaskResponse = await fetch(`${baseUrl}/tasks`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${firstUserToken}` },
+      body: JSON.stringify({ title: 'First user private task' }),
+    })
+    assert.equal(firstTaskResponse.status, 201)
+
+    const secondTaskResponse = await fetch(`${baseUrl}/tasks`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${secondUserToken}` },
+      body: JSON.stringify({ title: 'Second user private task' }),
+    })
+    assert.equal(secondTaskResponse.status, 201)
+
+    const usersResponse = await fetch(`${baseUrl}/admin/users`, {
+      headers: { Authorization: `Bearer ${adminToken}` },
+    })
+    const usersBody = await usersResponse.json()
+    const selectedUser = usersBody.users.find((user) => user.email === 'all-tasks-first@example.com')
+
+    const anonymousResponse = await fetch(`${baseUrl}/admin/users/${selectedUser.id}/tasks`)
+    assert.equal(anonymousResponse.status, 401)
+
+    const userResponse = await fetch(`${baseUrl}/admin/users/${selectedUser.id}/tasks`, {
+      headers: { Authorization: `Bearer ${firstUserToken}` },
+    })
+    assert.equal(userResponse.status, 403)
+
+    const adminResponse = await fetch(`${baseUrl}/admin/users/${selectedUser.id}/tasks`, {
+      headers: { Authorization: `Bearer ${adminToken}` },
+    })
+    assert.equal(adminResponse.status, 200)
+    const body = await adminResponse.json()
+    assert.equal(body.user.email, 'all-tasks-first@example.com')
+    assert.ok(body.tasks.some((task) => task.title === 'First user private task'))
+    assert.equal(body.tasks.some((task) => task.title === 'Second user private task'), false)
+
+    const missingUserResponse = await fetch(`${baseUrl}/admin/users/not-a-user/tasks`, {
+      headers: { Authorization: `Bearer ${adminToken}` },
+    })
+    assert.equal(missingUserResponse.status, 404)
   } finally {
     await new Promise((resolve) => server.close(resolve))
   }

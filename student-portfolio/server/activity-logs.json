@@ -445,5 +445,2178 @@
     "userAgent": "node",
     "details": "Invalid or expired OTP",
     "createdAt": "2026-09-22T13:06:44.926Z"
+  },
+  {
+    "event": "oauth_start",
+    "provider": "google",
+    "outcome": "failure",
+    "email": null,
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": "Google OAuth is not configured",
+    "createdAt": "2026-10-01T15:33:17.797Z"
+  },
+  {
+    "event": "password_reset_request",
+    "provider": "otp",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-01T15:33:32.758Z"
+  },
+  {
+    "event": "password reset requested",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "details": "A password reset OTP was requested.",
+    "createdAt": "2026-10-01T15:33:32.759Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "hradmin1211@gmail.com",
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": "Invalid credentials",
+    "createdAt": "2026-10-01T17:45:49.172Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "hradmin1211@gmail.com",
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": "Invalid credentials",
+    "createdAt": "2026-10-01T17:45:55.593Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "1790876779328",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-01T17:46:19.328Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-01T17:46:19.328Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "1790876779328",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-01T17:47:08.298Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "details": "Task: Learn Backend; Status: pending.",
+    "createdAt": "2026-10-01T17:47:42.388Z"
+  },
+  {
+    "event": "task status changed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "details": "Task: Learn Backend; Status: pending -> ongoing.",
+    "createdAt": "2026-10-01T17:48:04.565Z"
+  },
+  {
+    "event": "admin user record updated",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "details": "Updated user hradmin1211@gmail.com: {\"role\":\"user\"}",
+    "createdAt": "2026-10-01T17:48:35.074Z"
+  },
+  {
+    "event": "admin user record updated",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "details": "Updated user hradmin1211@gmail.com: {\"role\":\"user\"}",
+    "createdAt": "2026-10-01T17:48:36.977Z"
+  },
+  {
+    "event": "admin user record updated",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "details": "Updated user hradmin1211@gmail.com: {\"role\":\"user\"}",
+    "createdAt": "2026-10-01T17:48:44.090Z"
+  },
+  {
+    "event": "oauth_start",
+    "provider": "google",
+    "outcome": "failure",
+    "email": null,
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": "Google OAuth is not configured",
+    "createdAt": "2026-10-01T17:48:53.918Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "hradmin1211@gmail.com",
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": "Invalid credentials",
+    "createdAt": "2026-10-01T18:00:56.180Z"
+  },
+  {
+    "event": "oauth_start",
+    "provider": "google",
+    "outcome": "success",
+    "email": null,
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-01T18:01:14.642Z"
+  },
+  {
+    "event": "register",
+    "provider": "google",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "userId": "1790877681285",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-01T18:01:21.285Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "1790877813698",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-01T18:03:33.698Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-01T18:03:33.699Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "1790877813698",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-01T18:03:43.723Z"
+  },
+  {
+    "event": "admin user record updated",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "details": "Updated user sagarnarendrabhai@gmail.com: {\"role\":\"admin\"}",
+    "createdAt": "2026-10-01T18:05:43.942Z"
+  },
+  {
+    "event": "admin user record updated",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "details": "Updated user hradmin1211@gmail.com: {\"role\":\"user\"}",
+    "createdAt": "2026-10-01T18:05:46.168Z"
+  },
+  {
+    "event": "admin user record updated",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "details": "Updated user hradmin1211@gmail.com: {\"role\":\"user\"}",
+    "createdAt": "2026-10-01T18:05:57.146Z"
+  },
+  {
+    "event": "oauth_start",
+    "provider": "google",
+    "outcome": "success",
+    "email": null,
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-01T18:06:06.012Z"
+  },
+  {
+    "event": "login",
+    "provider": "google",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "userId": "1790877681285",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-01T18:06:10.892Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "details": "Task: Learn java; Status: pending.",
+    "createdAt": "2026-10-01T18:09:03.760Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "hradmin1211@gmail.com",
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": "Invalid credentials",
+    "createdAt": "2026-10-04T16:49:22.529Z"
+  },
+  {
+    "event": "oauth_start",
+    "provider": "google",
+    "outcome": "success",
+    "email": null,
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-04T16:49:36.375Z"
+  },
+  {
+    "event": "register",
+    "provider": "google",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "userId": "1791132587729",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-04T16:49:47.730Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "details": "Task: learn java; Status: pending.",
+    "createdAt": "2026-10-04T16:50:30.121Z"
+  },
+  {
+    "event": "task status changed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "details": "Task: learn java; Status: pending -> ongoing.",
+    "createdAt": "2026-10-04T16:50:54.826Z"
+  },
+  {
+    "event": "task status changed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "details": "Task: learn java; Status: ongoing -> completed.",
+    "createdAt": "2026-10-04T16:50:57.447Z"
+  },
+  {
+    "event": "task status changed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "details": "Task: learn java; Status: completed -> pending.",
+    "createdAt": "2026-10-04T16:51:01.131Z"
+  },
+  {
+    "event": "password_reset_request",
+    "provider": "otp",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-04T16:51:30.821Z"
+  },
+  {
+    "event": "password reset requested",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "details": "A password reset OTP was requested.",
+    "createdAt": "2026-10-04T16:51:30.822Z"
+  },
+  {
+    "event": "password_reset_request",
+    "provider": "otp",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-04T16:52:55.033Z"
+  },
+  {
+    "event": "password reset requested",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "details": "A password reset OTP was requested.",
+    "createdAt": "2026-10-04T16:52:55.034Z"
+  },
+  {
+    "event": "password_reset",
+    "provider": "otp",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-04T16:54:16.662Z"
+  },
+  {
+    "event": "password reset completed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "details": "The account password was changed.",
+    "createdAt": "2026-10-04T16:54:16.663Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "userId": "1791132587729",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-04T16:54:30.599Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "1791132904622",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-04T16:55:04.622Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-04T16:55:04.623Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "1791132904622",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-04T16:55:14.851Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "hradmin1211@gmail.com",
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": "Invalid credentials",
+    "createdAt": "2026-10-05T14:54:58.602Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "hradmin1211@gmail.com",
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": "Invalid credentials",
+    "createdAt": "2026-10-05T15:02:46.481Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "failure",
+    "email": "hradmin1211@gmail.com",
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": "Invalid credentials",
+    "createdAt": "2026-10-05T15:05:36.420Z"
+  },
+  {
+    "event": "oauth_start",
+    "provider": "google",
+    "outcome": "success",
+    "email": null,
+    "userId": null,
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-05T15:22:01.874Z"
+  },
+  {
+    "event": "register",
+    "provider": "google",
+    "outcome": "success",
+    "email": "sagarnarendrabhai@gmail.com",
+    "userId": "6ac3c0a9939a951d8d14845d",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-05T15:22:18.457Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "6ac3c1d0939a951d8d14845f",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-05T15:27:12.978Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T15:27:13.089Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "6ac3c1d0939a951d8d14845f",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-05T15:27:21.347Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "task-user@example.com",
+    "userId": "6ac3d2c6f50586664763dac5",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:34.946Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "task-user@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:39:35.026Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "task-user@example.com",
+    "userId": "6ac3d2c6f50586664763dac5",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:35.261Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "userId": "6ac3d2c7f50586664763dac9",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:35.619Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:39:35.670Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "userId": "6ac3d2c7f50586664763dac9",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:35.893Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "details": "Task: Write report; Status: pending.",
+    "createdAt": "2026-10-05T16:39:36.055Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "charset-task@example.com",
+    "userId": "6ac3d2c8f50586664763dacf",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:36.296Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "charset-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:39:36.379Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "charset-task@example.com",
+    "userId": "6ac3d2c8f50586664763dacf",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:36.610Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "charset-task@example.com",
+    "details": "Task: Charset request; Status: pending.",
+    "createdAt": "2026-10-05T16:39:36.725Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "owner-task@example.com",
+    "userId": "6ac3d2c8f50586664763dad5",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:37.036Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "owner-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:39:37.099Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "owner-task@example.com",
+    "userId": "6ac3d2c8f50586664763dad5",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:37.293Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "other-task@example.com",
+    "userId": "6ac3d2c9f50586664763dad9",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:37.550Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "other-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:39:37.631Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "other-task@example.com",
+    "userId": "6ac3d2c9f50586664763dad9",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:37.851Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "owner-task@example.com",
+    "details": "Task: Private task; Status: pending.",
+    "createdAt": "2026-10-05T16:39:37.979Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "userId": "6ac3d2cbf50586664763dadf",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:39.219Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:39:39.276Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "userId": "6ac3d2cbf50586664763dadf",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:39.483Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "details": "Task: Draft PR; Status: pending.",
+    "createdAt": "2026-10-05T16:39:39.645Z"
+  },
+  {
+    "event": "task status changed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "details": "Task: Draft PR; Status: pending -> completed.",
+    "createdAt": "2026-10-05T16:39:39.912Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "userId": "6ac3d2ccf50586664763dae6",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:40.113Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:39:40.191Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "userId": "6ac3d2ccf50586664763dae6",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:40.408Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "details": "Task: Build feature; Status: pending.",
+    "createdAt": "2026-10-05T16:39:40.597Z"
+  },
+  {
+    "event": "task status changed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "details": "Task: Build feature; Status: pending -> ongoing.",
+    "createdAt": "2026-10-05T16:39:40.823Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "delete-task@example.com",
+    "userId": "6ac3d2ccf50586664763daed",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:41.096Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "delete-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:39:41.159Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "delete-task@example.com",
+    "userId": "6ac3d2ccf50586664763daed",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:41.417Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "delete-task@example.com",
+    "details": "Task: Delete this; Status: pending.",
+    "createdAt": "2026-10-05T16:39:41.555Z"
+  },
+  {
+    "event": "task deleted",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "delete-task@example.com",
+    "details": "Task ID: 6ac3d2cdf50586664763daf1.",
+    "createdAt": "2026-10-05T16:39:41.710Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "invalid-id@example.com",
+    "userId": "6ac3d2cdf50586664763daf4",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:42.038Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "invalid-id@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:39:42.095Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "invalid-id@example.com",
+    "userId": "6ac3d2cdf50586664763daf4",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:42.281Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "auth-user-1791218382343@example.com",
+    "userId": "6ac3d2cef50586664763daf8",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:42.556Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "auth-user-1791218382343@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:39:42.616Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "login-user@example.com",
+    "userId": "6ac3d2cef50586664763dafb",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:42.863Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "login-user@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:39:42.916Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "login-user@example.com",
+    "userId": "6ac3d2cef50586664763dafb",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:43.128Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "userId": "6ac3d2cff50586664763daff",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:43.445Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:39:43.510Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "userId": "6ac3d2cff50586664763daff",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:43.733Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "regular-role@example.com",
+    "userId": "6ac3d2d0f50586664763db03",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:44.398Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "regular-role@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:39:44.536Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "regular-role@example.com",
+    "userId": "6ac3d2d0f50586664763db03",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:44.746Z"
+  },
+  {
+    "event": "oauth_start",
+    "provider": "google",
+    "outcome": "success",
+    "email": null,
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:44.954Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "reset-user@example.com",
+    "userId": "6ac3d2d1f50586664763db08",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:45.980Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "reset-user@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:39:46.060Z"
+  },
+  {
+    "event": "password_reset_request",
+    "provider": "otp",
+    "outcome": "success",
+    "email": "reset-user@example.com",
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:39:46.214Z"
+  },
+  {
+    "event": "password reset requested",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "reset-user@example.com",
+    "details": "A password reset OTP was requested.",
+    "createdAt": "2026-10-05T16:39:46.267Z"
+  },
+  {
+    "event": "password_reset",
+    "provider": "otp",
+    "outcome": "failure",
+    "email": "reset-user@example.com",
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": "Invalid or expired OTP",
+    "createdAt": "2026-10-05T16:39:46.511Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "task-user@example.com",
+    "userId": "1791218577358",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:57.359Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "task-user@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:42:57.360Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "task-user@example.com",
+    "userId": "1791218577358",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:57.441Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "userId": "1791218577530",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:57.530Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:42:57.532Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "userId": "1791218577530",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:57.604Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "details": "Task: Write report; Status: pending.",
+    "createdAt": "2026-10-05T16:42:57.610Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "charset-task@example.com",
+    "userId": "1791218577680",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:57.681Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "charset-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:42:57.682Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "charset-task@example.com",
+    "userId": "1791218577680",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:57.749Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "charset-task@example.com",
+    "details": "Task: Charset request; Status: pending.",
+    "createdAt": "2026-10-05T16:42:57.754Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "owner-task@example.com",
+    "userId": "1791218577825",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:57.825Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "owner-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:42:57.826Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "owner-task@example.com",
+    "userId": "1791218577825",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:57.897Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "other-task@example.com",
+    "userId": "1791218577965",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:57.965Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "other-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:42:57.966Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "other-task@example.com",
+    "userId": "1791218577965",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:58.033Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "owner-task@example.com",
+    "details": "Task: Private task; Status: pending.",
+    "createdAt": "2026-10-05T16:42:58.037Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "userId": "1791218578109",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:58.109Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:42:58.110Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "userId": "1791218578109",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:58.178Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "details": "Task: Draft PR; Status: pending.",
+    "createdAt": "2026-10-05T16:42:58.182Z"
+  },
+  {
+    "event": "task status changed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "update-task@example.com",
+    "details": "Task: Draft PR; Status: pending -> completed.",
+    "createdAt": "2026-10-05T16:42:58.186Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "userId": "1791218578254",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:58.254Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:42:58.256Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "userId": "1791218578254",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:58.327Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "details": "Task: Build feature; Status: pending.",
+    "createdAt": "2026-10-05T16:42:58.331Z"
+  },
+  {
+    "event": "task status changed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "status-task@example.com",
+    "details": "Task: Build feature; Status: pending -> ongoing.",
+    "createdAt": "2026-10-05T16:42:58.334Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "delete-task@example.com",
+    "userId": "1791218578404",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:58.405Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "delete-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:42:58.407Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "delete-task@example.com",
+    "userId": "1791218578404",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:58.479Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "delete-task@example.com",
+    "details": "Task: Delete this; Status: pending.",
+    "createdAt": "2026-10-05T16:42:58.483Z"
+  },
+  {
+    "event": "task deleted",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "delete-task@example.com",
+    "details": "Task ID: 1791218578483.",
+    "createdAt": "2026-10-05T16:42:58.486Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "invalid-id@example.com",
+    "userId": "1791218578556",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:58.556Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "invalid-id@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:42:58.557Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "invalid-id@example.com",
+    "userId": "1791218578556",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:58.625Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "auth-user-1791218578635@example.com",
+    "userId": "1791218578701",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:58.701Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "auth-user-1791218578635@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:42:58.702Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "login-user@example.com",
+    "userId": "1791218578771",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:58.771Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "login-user@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:42:58.772Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "login-user@example.com",
+    "userId": "1791218578771",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:58.840Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "userId": "1791218578913",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:58.913Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:42:58.914Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "userId": "1791218578913",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:58.981Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "regular-role@example.com",
+    "userId": "1791218579049",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:59.049Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "regular-role@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:42:59.050Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "regular-role@example.com",
+    "userId": "1791218579049",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:59.117Z"
+  },
+  {
+    "event": "oauth_start",
+    "provider": "google",
+    "outcome": "failure",
+    "email": null,
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": "Google OAuth is not configured",
+    "createdAt": "2026-10-05T16:42:59.132Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "reset-user@example.com",
+    "userId": "1791218579201",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:59.201Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "reset-user@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:42:59.202Z"
+  },
+  {
+    "event": "password_reset_request",
+    "provider": "otp",
+    "outcome": "success",
+    "email": "reset-user@example.com",
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:42:59.206Z"
+  },
+  {
+    "event": "password reset requested",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "reset-user@example.com",
+    "details": "A password reset OTP was requested.",
+    "createdAt": "2026-10-05T16:42:59.207Z"
+  },
+  {
+    "event": "password_reset",
+    "provider": "otp",
+    "outcome": "failure",
+    "email": "reset-user@example.com",
+    "userId": null,
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": "Invalid or expired OTP",
+    "createdAt": "2026-10-05T16:42:59.275Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "userId": "1791218652671",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:44:12.671Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:44:12.674Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "userId": "1791218652671",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:44:12.761Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "details": "Task: Write report; Status: pending.",
+    "createdAt": "2026-10-05T16:44:12.773Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "history-owner@example.com",
+    "userId": "1791218892820",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:48:12.820Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "history-owner@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:48:12.823Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "history-owner@example.com",
+    "userId": "1791218892820",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:48:12.906Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "history-other@example.com",
+    "userId": "1791218892982",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:48:12.982Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "history-other@example.com",
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:48:12.986Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "history-other@example.com",
+    "userId": "1791218892982",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:48:13.056Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "history-owner@example.com",
+    "details": "Task: Report task history; Status: pending.",
+    "createdAt": "2026-10-05T16:48:13.066Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "6ac3c1d0939a951d8d14845f",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-05T16:50:24.965Z"
+  },
+  {
+    "event": "user deleted",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "task-user@example.com",
+    "details": "User account task-user@example.com was deleted by hradmin1211@gmail.com.",
+    "createdAt": "2026-10-05T16:50:36.906Z"
+  },
+  {
+    "event": "user deleted",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "write-task@example.com",
+    "details": "User account write-task@example.com was deleted by hradmin1211@gmail.com.",
+    "createdAt": "2026-10-05T16:50:41.249Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "history-owner@example.com",
+    "userId": "1791219291280",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:54:51.281Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "history-owner@example.com",
+    "userId": null,
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:54:51.283Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "history-owner@example.com",
+    "userId": "1791219291280",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:54:51.365Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "history-other@example.com",
+    "userId": "1791219291438",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:54:51.439Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "history-other@example.com",
+    "userId": null,
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:54:51.445Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "history-other@example.com",
+    "userId": "1791219291438",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:54:51.516Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "history-owner@example.com",
+    "userId": "1791219291280",
+    "details": "Task: Report task history; Status: pending.",
+    "createdAt": "2026-10-05T16:54:51.523Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "history-owner@example.com",
+    "userId": "1791219315930",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:55:15.930Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "history-owner@example.com",
+    "userId": null,
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:55:15.933Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "history-owner@example.com",
+    "userId": "1791219315930",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:55:16.016Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "history-other@example.com",
+    "userId": "1791219316096",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:55:16.096Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "history-other@example.com",
+    "userId": null,
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T16:55:16.098Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "history-other@example.com",
+    "userId": "1791219316096",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:55:16.182Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "history-owner@example.com",
+    "userId": "1791219315930",
+    "details": "Task: Report task history; Status: pending.",
+    "createdAt": "2026-10-05T16:55:16.190Z"
+  },
+  {
+    "event": "user profile updated",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "history-owner-renamed@example.com",
+    "userId": null,
+    "details": "Email changed from history-owner@example.com to history-owner-renamed@example.com.",
+    "createdAt": "2026-10-05T16:55:16.195Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "history-owner-renamed@example.com",
+    "userId": "1791219315930",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T16:55:16.265Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "6ac3c1d0939a951d8d14845f",
+    "details": "Task: Learn Java; Status: pending.",
+    "createdAt": "2026-10-05T17:00:39.640Z"
+  },
+  {
+    "event": "task status changed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "6ac3c1d0939a951d8d14845f",
+    "details": "Task: Learn Java; Status: pending -> ongoing.",
+    "createdAt": "2026-10-05T17:00:50.274Z"
+  },
+  {
+    "event": "task status changed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "6ac3c1d0939a951d8d14845f",
+    "details": "Task: Learn Java; Status: ongoing -> completed.",
+    "createdAt": "2026-10-05T17:00:52.422Z"
+  },
+  {
+    "event": "task status changed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "6ac3c1d0939a951d8d14845f",
+    "details": "Task: Learn Java; Status: completed -> ongoing.",
+    "createdAt": "2026-10-05T17:19:10.410Z"
+  },
+  {
+    "event": "task deleted",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "6ac3c1d0939a951d8d14845f",
+    "details": "Task ID: 6ac3d7b78a1cbbaebb31ec19.",
+    "createdAt": "2026-10-05T17:20:18.110Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "6ac3c1d0939a951d8d14845f",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "details": null,
+    "createdAt": "2026-10-05T17:26:48.798Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "6ac3c1d0939a951d8d14845f",
+    "details": "Task: Learn java; Status: pending.",
+    "createdAt": "2026-10-05T17:27:53.400Z"
+  },
+  {
+    "event": "task status changed",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "6ac3c1d0939a951d8d14845f",
+    "details": "Task: Learn java; Status: pending -> ongoing.",
+    "createdAt": "2026-10-05T17:28:04.174Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "userId": "1791221656467",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:34:16.467Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "userId": null,
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T17:34:16.470Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "userId": "1791221656467",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:34:16.556Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "regular-role@example.com",
+    "userId": "1791221656636",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:34:16.636Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "regular-role@example.com",
+    "userId": null,
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T17:34:16.638Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "regular-role@example.com",
+    "userId": "1791221656636",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:34:16.713Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "userId": "1791221872282",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:37:52.282Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "userId": null,
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T17:37:52.285Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "userId": "1791221872282",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:37:52.367Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "all-tasks-first@example.com",
+    "userId": "1791221872441",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:37:52.441Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "all-tasks-first@example.com",
+    "userId": null,
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T17:37:52.449Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "all-tasks-first@example.com",
+    "userId": "1791221872441",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:37:52.521Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "all-tasks-second@example.com",
+    "userId": "1791221872591",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:37:52.591Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "all-tasks-second@example.com",
+    "userId": null,
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T17:37:52.592Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "all-tasks-second@example.com",
+    "userId": "1791221872591",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:37:52.659Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "all-tasks-first@example.com",
+    "userId": "1791221872441",
+    "details": "Task: First user private task; Status: pending.",
+    "createdAt": "2026-10-05T17:37:52.665Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "all-tasks-second@example.com",
+    "userId": "1791221872591",
+    "details": "Task: Second user private task; Status: pending.",
+    "createdAt": "2026-10-05T17:37:52.670Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "userId": "1791222264732",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:44:24.732Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "userId": null,
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T17:44:24.735Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "admin-role@example.com",
+    "userId": "1791222264732",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:44:24.817Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "all-tasks-first@example.com",
+    "userId": "1791222264891",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:44:24.891Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "all-tasks-first@example.com",
+    "userId": null,
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T17:44:24.895Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "all-tasks-first@example.com",
+    "userId": "1791222264891",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:44:24.965Z"
+  },
+  {
+    "event": "register",
+    "provider": "password",
+    "outcome": "success",
+    "email": "all-tasks-second@example.com",
+    "userId": "1791222265044",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:44:25.044Z"
+  },
+  {
+    "event": "user registered",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "all-tasks-second@example.com",
+    "userId": null,
+    "details": "A new account was created.",
+    "createdAt": "2026-10-05T17:44:25.045Z"
+  },
+  {
+    "event": "login",
+    "provider": "password",
+    "outcome": "success",
+    "email": "all-tasks-second@example.com",
+    "userId": "1791222265044",
+    "ip": "127.0.0.1",
+    "userAgent": "node",
+    "details": null,
+    "createdAt": "2026-10-05T17:44:25.115Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "all-tasks-first@example.com",
+    "userId": "1791222264891",
+    "details": "Task: First user private task; Status: pending.",
+    "createdAt": "2026-10-05T17:44:25.121Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "all-tasks-second@example.com",
+    "userId": "1791222265044",
+    "details": "Task: Second user private task; Status: pending.",
+    "createdAt": "2026-10-05T17:44:25.125Z"
   }
 ]

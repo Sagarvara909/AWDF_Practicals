@@ -61,6 +61,18 @@ The task routes are protected by the Express authentication middleware. A
 missing or expired token redirects the browser back to the login screen, and
 the Logout button clears the stored token.
 
+## Postman JWT and Authentication Logs
+
+Import `postman/Student-Portfolio.postman_collection.json` into Postman. Set
+the `userEmail`, `userPassword`, `adminEmail`, and `adminPassword` collection
+variables for your accounts. Run the login requests first; their tests save
+separate JWTs for user and admin requests. The collection checks protected
+profile and task routes, verifies missing-token and non-admin requests are
+rejected, and fetches authentication events from `GET /admin/auth-logs` and a
+selected user's tasks from `GET /admin/users/:id/tasks` with the admin JWT.
+Set `reportUserId` to the chosen user's ID from `GET /admin/users`. The Admin
+page also has a separate **Download PDF** button on each user row.
+
 Useful checks:
 
 - `npm test` runs the Express CRUD tests.

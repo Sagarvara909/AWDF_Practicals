@@ -44,6 +44,11 @@ export async function getTasks() {
   return tasks
 }
 
+export async function getTaskHistory() {
+  const { history } = await request('/task-history')
+  return history
+}
+
 export async function createTask(task) {
   const { task: createdTask } = await request('/tasks', {
     method: 'POST',
@@ -110,6 +115,10 @@ export async function updateCurrentUser(updates) {
 export async function getAdminUsers() {
   const { users } = await request('/admin/users')
   return users
+}
+
+export async function getAdminUserTasks(userId) {
+  return request(`/admin/users/${userId}/tasks`)
 }
 
 export async function updateAdminUser(userId, updates) {

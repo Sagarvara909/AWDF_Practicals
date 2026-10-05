@@ -1,0 +1,211 @@
+{
+  "info": {
+    "_postman_id": "b1d1533d-2d14-4aa3-8c54-56982406a9ec",
+    "name": "Student Portfolio API - JWT and Logs",
+    "description": "JWT-protected API requests and admin authentication log checks.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login user (save JWT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login succeeds and returns a JWT', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.token).to.be.a('string').and.not.empty;",
+                  "    pm.collectionVariables.set('userToken', body.token);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/login"
+          }
+        },
+        {
+          "name": "Login admin (save JWT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Admin login succeeds and returns a JWT', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.token).to.be.a('string').and.not.empty;",
+                  "    pm.collectionVariables.set('adminToken', body.token);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "JWT-protected routes",
+      "item": [
+        {
+          "name": "Get current profile (user JWT)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{userToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/me"
+          }
+        },
+        {
+          "name": "Get my tasks (user JWT)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{userToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks"
+          }
+        },
+        {
+          "name": "Reject missing JWT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Protected route rejects requests without a JWT', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": { "method": "GET", "url": "{{baseUrl}}/tasks" }
+        }
+      ]
+    },
+    {
+      "name": "Admin authentication logs",
+      "item": [
+        {
+          "name": "Get auth logs (admin JWT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Admin can read authentication logs', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.logs).to.be.an('array');",
+                  "    console.log(`Retrieved ${body.logs.length} authentication log entries.`);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/admin/auth-logs"
+          }
+        },
+        {
+          "name": "Get selected user's tasks (admin JWT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Admin can read the selected user task list', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.user.email).to.be.a('string');",
+                  "    pm.expect(body.tasks).to.be.an('array');",
+                  "    console.log(`Retrieved ${body.tasks.length} tasks for ${body.user.email}.`);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/admin/users/{{reportUserId}}/tasks"
+          }
+        },
+        {
+          "name": "Reject non-admin JWT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Regular users cannot read admin reports', function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{userToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/admin/auth-logs"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "userEmail", "value": "" },
+    { "key": "userPassword", "value": "" },
+    { "key": "adminEmail", "value": "" },
+    { "key": "adminPassword", "value": "" },
+    { "key": "reportUserId", "value": "" },
+    { "key": "userToken", "value": "" },
+    { "key": "adminToken", "value": "" }
+  ]
+}

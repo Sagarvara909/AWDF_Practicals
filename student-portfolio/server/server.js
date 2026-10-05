@@ -99,6 +99,8 @@ function normalizeTask(task) {
     title: task.title,
     completed: status === 'completed',
     status,
+    createdAt: task.createdAt || null,
+    updatedAt: task.updatedAt || null,
   }
 }
 
@@ -140,12 +142,13 @@ async function recordAuthEvent({ req, event, provider, outcome, email = null, us
   }
 }
 
-async function recordActivityEvent({ event, email = null, details = null }) {
+async function recordActivityEvent({ event, email = null, userId = null, details = null }) {
   const log = {
     event,
     provider: 'activity',
     outcome: 'success',
     email: email ? String(email).trim().toLowerCase() : null,
+    userId: userId ? String(userId) : null,
     details,
   }
 
@@ -197,6 +200,29 @@ async function listAuthLogs() {
   return [...memoryAuthLogs].reverse().slice(0, 100)
 }
 
+async function listTaskHistory(userId, email) {
+  const normalizedUserId = String(userId)
+  const normalizedEmail = String(email).trim().toLowerCase()
+  const taskEvents = ['task created', 'task updated', 'task status changed', 'task deleted']
+  await connectToMongo()
+
+  if (mongoReady) {
+    return AuthLogModel.find({
+      provider: 'activity',
+      event: { $in: taskEvents },
+      $or: [{ userId: normalizedUserId }, { userId: null, email: normalizedEmail }],
+    })
+      .sort({ createdAt: -1 })
+      .lean()
+  }
+
+  return memoryAuthLogs
+    .filter((log) => log.provider === 'activity'
+      && taskEvents.includes(log.event)
+      && (log.userId === normalizedUserId || (!log.userId && log.email === normalizedEmail)))
+    .sort((left, right) => new Date(right.createdAt) - new Date(left.createdAt))
+}
+
 function getJwtSecret() {
   return process.env.JWT_SECRET || 'dev-secret-change-me'
 }
@@ -229,7 +255,9 @@ async function listTasks(ownerId) {
     return tasks.map(normalizeTask)
   }
 
-  return memoryTasks.map((task) => ({ ...task }))
+  return memoryTasks
+    .filter((task) => String(task.ownerId) === String(ownerId))
+    .map((task) => ({ ...task }))
 }
 
 async function createTask(ownerId, title, status = 'pending') {
@@ -246,6 +274,8 @@ async function createTask(ownerId, title, status = 'pending') {
     title,
     completed: status === 'completed',
     status,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   }
 
   memoryTasks.push(task)
@@ -298,6 +328,8 @@ async function updateTask(ownerId, taskId, updates) {
     memoryTasks[index].status = updates.status
     memoryTasks[index].completed = updates.status === 'completed'
   }
+
+  memoryTasks[index].updatedAt = new Date()
 
   return { task: { ...memoryTasks[index] }, previousStatus }
 }
@@ -515,7 +547,12 @@ async function sendAdminActivityEmail({ event, userEmail, details }) {
 }
 
 async function notifyAdminActivity(activity) {
-  await recordActivityEvent({ event: activity.event, email: activity.userEmail, details: activity.details })
+  await recordActivityEvent({
+    event: activity.event,
+    email: activity.userEmail,
+    userId: activity.userId,
+    details: activity.details,
+  })
 
   return sendAdminActivityEmail(activity)
     .then(() => {
@@ -945,6 +982,17 @@ function createApp() {
     res.status(200).json({ users: await listUsers() })
   })
 
+  app.get('/admin/users/:id/tasks', async (req, res) => {
+    const user = await findUserById(req.params.id)
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' })
+    }
+
+    const ownerId = user._id ? user._id.toString() : String(user.id)
+    const tasks = await listTasks(ownerId)
+    res.status(200).json({ user: normalizeUser(user), tasks })
+  })
+
   app.get('/admin/auth-logs', async (req, res) => {
     res.status(200).json({ logs: await listAuthLogs() })
   })
@@ -1009,6 +1057,11 @@ function createApp() {
     res.status(200).json({ message: 'User deleted', user: deletedUser })
   })
 
+  app.get('/task-history', authMiddleware, async (req, res) => {
+    const history = await listTaskHistory(req.user.id, req.user.email)
+    res.status(200).json({ history })
+  })
+
   app.use(['/tasks', '/api/todos'], authMiddleware)
 
   app.get(['/tasks', '/api/todos'], async (req, res) => {
@@ -1022,6 +1075,7 @@ function createApp() {
     await notifyAdminActivity({
       event: 'task created',
       userEmail: req.user.email,
+      userId: req.user.id,
       details: `Task: ${task.title}; Status: ${task.status}.`,
     })
     res.status(201).json({ message: 'Task created', task })
@@ -1055,12 +1109,14 @@ function createApp() {
       void notifyAdminActivity({
         event: 'task status changed',
         userEmail: req.user.email,
+        userId: req.user.id,
         details: `Task: ${task.title}; Status: ${previousStatus} -> ${task.status}.`,
       })
     } else {
       void notifyAdminActivity({
         event: 'task updated',
         userEmail: req.user.email,
+        userId: req.user.id,
         details: `Task: ${task.title}; Status: ${task.status}.`,
       })
     }
@@ -1077,6 +1133,7 @@ function createApp() {
     await notifyAdminActivity({
       event: 'task deleted',
       userEmail: req.user.email,
+      userId: req.user.id,
       details: `Task ID: ${req.params.id}.`,
     })
 
