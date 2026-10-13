@@ -1,17 +1,20 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { clearToken, getCurrentUser, getToken } from './api';
 import Header from './pages/Header';
 import Footer from './pages/Footer';
-import Home from './pages/Home';
-import Projects from './pages/Projects';
-import Contact from './pages/Contact';
-import Task from './pages/task'; // This is your Task Manager page
 import NotFound from './pages/NotFound';
-import Auth from './pages/Auth';
-import Profile from './pages/Profile';
-import Admin from './pages/Admin';
+import RouteLoader from './pages/RouteLoader';
+import DelayedFallback from './pages/DelayedFallback';
 import './App.css';
+
+const Home = lazy(() => import('./pages/Home'));
+const Projects = lazy(() => import('./pages/Projects'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Task = lazy(() => import('./pages/task'));
+const Auth = lazy(() => import('./pages/Auth'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Admin = lazy(() => import('./pages/Admin'));
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -27,7 +30,7 @@ function App() {
     getCurrentUser().then(setCurrentUser).catch(() => setCurrentUser(null));
   }, [location.pathname]);
 
-  const studentName = currentUser?.email || 'Student Portfolio';
+  const studentName = currentUser?.username || 'Student Portfolio';
 
   const skillsList = [
     'HTML & CSS', 'JavaScript ES6+', 'React & Hooks', 'Vite Build Tool',
@@ -67,16 +70,24 @@ function App() {
       </nav>
 
       <main className="app-main">
-        <Routes>
-          <Route path="/" element={<Home skillsList={skillsList} />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/task" element={<Task />} />
-          <Route path="/login" element={<Auth />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense
+          fallback={
+            <DelayedFallback delay={300}>
+              <RouteLoader label="Loading page..." />
+            </DelayedFallback>
+          }
+        >
+          <Routes>
+            <Route path="/" element={<Home skillsList={skillsList} />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/task" element={<Task />} />
+            <Route path="/login" element={<Auth />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </main>
 
       <Footer />

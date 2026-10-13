@@ -71,5 +71,32 @@
 .task-page .task-card { display: grid; grid-template-columns: minmax(0, 1fr); align-items: stretch; gap: 10px; min-width: 0; overflow: hidden; }
 .task-page .task-title { width: 100%; min-width: 0; overflow-wrap: anywhere; }
 .task-page .task-status { width: 100%; min-width: 0; }
-.task-page .task-actions { width: 100%; min-width: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .task-page .task-actions button { min-width: 0; width: 100%; }
+
+.task-analytics-toggle-bar {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.analytics-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px !important;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 12px;
+  background: var(--lime-soft) !important;
+  color: var(--forest-deep) !important;
+  border: 1px solid rgba(23, 55, 47, 0.15) !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.analytics-toggle-btn:hover {
+  background: var(--lime) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(23, 55, 47, 0.1);
+}
+

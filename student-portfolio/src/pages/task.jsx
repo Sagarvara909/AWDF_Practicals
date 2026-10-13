@@ -1,8 +1,12 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createTask, deleteTask, getTasks, updateTask } from '../api'
 import './Task.css'
 import Toast from './Toast'
+import DelayedFallback from './DelayedFallback'
+
+// Heavy third-party/analytical component lazy-loaded on demand (Supplementary Problem 1)
+const TaskAnalyticsChart = lazy(() => import('./TaskAnalyticsChart'))
 
 function Task() {
   const navigate = useNavigate()
@@ -12,6 +16,7 @@ function Task() {
   const [status, setStatus] = useState('loading')
   const [error, setError] = useState('')
   const [toast, setToast] = useState(null)
+  const [showAnalytics, setShowAnalytics] = useState(false)
 
   useEffect(() => {
     async function loadTasks() {
@@ -157,14 +162,20 @@ function Task() {
   }
 
   const isEditing = Boolean(editingTask)
-  const taskColumns = [
-    { key: 'pending', label: 'Pending' },
-    { key: 'ongoing', label: 'Ongoing' },
-    { key: 'completed', label: 'Completed' },
-  ].map((column) => ({
-    ...column,
-    tasks: tasks.filter((task) => (task.status || (task.completed ? 'completed' : 'pending')) === column.key),
-  }))
+  // Performance Optimization (Supplementary Problem 3):
+  // Memoize task columns computation to prevent unnecessary re-computations and re-renders on keystrokes
+  const taskColumns = useMemo(
+    () =>
+      [
+        { key: 'pending', label: 'Pending' },
+        { key: 'ongoing', label: 'Ongoing' },
+        { key: 'completed', label: 'Completed' },
+      ].map((column) => ({
+        ...column,
+        tasks: tasks.filter((task) => (task.status || (task.completed ? 'completed' : 'pending')) === column.key),
+      })),
+    [tasks]
+  )
 
   return (
     <section className="task-page">
@@ -231,6 +242,31 @@ function Task() {
           </section>
         ))}
       </div>
+
+      <div className="task-analytics-toggle-bar">
+        <button
+          type="button"
+          className="analytics-toggle-btn"
+          onClick={() => setShowAnalytics((prev) => !prev)}
+        >
+          {showAnalytics ? '📊 Hide Performance Analytics' : '📊 View Task Analytics & Charts (Lazy Loaded)'}
+        </button>
+      </div>
+
+      {showAnalytics && (
+        <Suspense
+          fallback={
+            <DelayedFallback delay={200}>
+              <div className="chart-skeleton-placeholder">
+                Loading analytics chunk...
+              </div>
+            </DelayedFallback>
+          }
+        >
+          <TaskAnalyticsChart tasks={tasks} />
+        </Suspense>
+      )}
+
       <Toast message={toast?.message} type={toast?.type} />
     </section>
   )

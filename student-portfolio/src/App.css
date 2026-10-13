@@ -58,6 +58,66 @@
 .page-card { padding: clamp(24px, 5vw, 52px); }
 .page-card--wide { width: min(100%, 880px); margin: 0 auto; }
 .page-card--alert { background: #fff1eb; border-color: #f4c6b3; }
+.route-loading {
+  display: grid;
+  min-height: 34vh;
+  place-items: center;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.route-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 42vh;
+  width: 100%;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.route-loading-label {
+  font-family: 'JetBrains Mono', 'Fira Code', 'DM Sans', monospace;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.route-loading-text {
+  font-weight: 600;
+}
+
+.route-loading-bar-track {
+  width: min(240px, 80%);
+  height: 4px;
+  background: var(--surface-muted);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.route-loading-bar-thumb {
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--lime), var(--forest));
+  border-radius: 4px;
+  position: absolute;
+  animation: loadingBarSlide 1.2s infinite ease-in-out;
+}
+
+@keyframes loadingBarSlide {
+  0% { left: -40%; width: 30%; }
+  50% { left: 40%; width: 50%; }
+  100% { left: 100%; width: 30%; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 h2, h3 { font-family: 'Space Grotesk', 'Trebuchet MS', sans-serif; }
 section h2 { margin: 0 0 14px; color: var(--forest); font-size: clamp(1.8rem, 4vw, 3rem); letter-spacing: -.045em; }
 .app.dark section h2 { color: var(--lime); }
@@ -78,6 +138,11 @@ section p { margin: 0; color: var(--ink-soft); line-height: 1.8; }
 .site-footer p { margin: 5px 0; color: #b9d0b2; font-size: .9rem; }
 .auth-page { width: min(100%, 560px); margin: 0 auto; }
 .auth-form button { margin-top: 8px; }
+.password-input-wrap { position: relative; width: 100%; }
+.password-input-wrap input { padding-right: 76px; }
+.auth-form .password-visibility-toggle { position: absolute; top: 50%; right: 9px; margin: 0; padding: 6px 9px; border: 0; border-radius: 8px; color: var(--forest); background: transparent; font-size: .82rem; font-weight: 700; transform: translateY(-50%); cursor: pointer; }
+.auth-form .password-visibility-toggle:hover { color: var(--forest-deep); background: var(--lime-soft); box-shadow: none; transform: translateY(-50%); }
+.app.dark .auth-form .password-visibility-toggle { color: var(--lime); }
 .profile-export-btn { display: block; margin: 16px auto 0; }
 .auth-switch { margin-top: 18px; padding: 0; border: 0; color: var(--forest); background: transparent; font-weight: 700; text-decoration: underline; cursor: pointer; }
 .auth-links { display: grid; gap: 8px; justify-items: start; }
@@ -180,12 +245,17 @@ body {
 }
 
 .admin-user-list { display: grid; gap: 12px; margin-top: 24px; }
-.admin-user { display: grid; grid-template-columns: minmax(0, 1fr) 150px auto; gap: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-muted); }
-.admin-user input, .admin-user select { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; color: var(--ink); background: var(--surface); }
+.admin-user { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-muted); }
+.admin-user-details, .admin-user-actions { display: flex; align-items: center; gap: 12px; }
+.admin-user-details { min-width: 0; }
+.admin-user-details strong { overflow-wrap: anywhere; }
+.admin-user-role { border-radius: 999px; padding: 4px 10px; background: var(--surface); color: var(--ink-muted); font-size: 0.85rem; text-transform: capitalize; }
+.admin-user-delete { background: #b42318; color: white; }
 .admin-user-download { white-space: nowrap; }
 
 @media (max-width: 560px) {
-  .admin-user { grid-template-columns: 1fr; }
+  .admin-user { align-items: stretch; flex-direction: column; }
+  .admin-user-actions { flex-wrap: wrap; }
 }
 
 .app.dark .site-nav,
@@ -492,4 +562,3 @@ section p { color: var(--ink-soft); }
   .nav-links, .nav-actions { justify-content: center; }
   .nav-link, .theme-btn, .logout-btn { flex: 1; text-align: center; }
 }
-
