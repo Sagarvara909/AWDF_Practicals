@@ -10,7 +10,9 @@ function Auth() {
   const [resetStep, setResetStep] = useState(1)
   const [resetOtp, setResetOtp] = useState('')
   const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [message, setMessage] = useState(location.state?.message || '')
   const [error, setError] = useState(() => new URLSearchParams(window.location.search).get('oauthError') || '')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -50,7 +52,7 @@ function Auth() {
         await loginUser({ email, password })
         navigate('/task')
       } else {
-        await registerUser({ email, password })
+        await registerUser({ email, username, password })
         setIsLogin(true)
         setMessage('Registration successful. Please log in.')
         setPassword('')
@@ -68,10 +70,32 @@ function Auth() {
       <p>{isResetting ? resetStep === 1 ? 'Enter your email to receive a password reset OTP.' : 'Enter the 6-digit OTP sent to your email and choose a new password.' : isLogin ? 'Sign in to access your protected task list.' : 'Register to create and manage tasks.'}</p>
 
       <form className="auth-form" onSubmit={submit}>
+        {!isResetting && !isLogin && <>
+          <label htmlFor="username">User name</label>
+          <input id="username" type="text" value={username} onChange={(event) => setUsername(event.target.value)} maxLength="60" autoComplete="name" required />
+        </>}
         <label htmlFor="email">Email</label>
         <input id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} disabled={isResetting && resetStep === 2} required />
-        {isResetting && resetStep === 2 && <><label htmlFor="reset-otp">Email OTP</label><input id="reset-otp" type="text" inputMode="numeric" pattern="[0-9]{6}" maxLength="6" value={resetOtp} onChange={(event) => setResetOtp(event.target.value.replace(/\D/g, ''))} required /><label htmlFor="password">New password</label><input id="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} minLength="6" required /></>}
-        {!isResetting && <><label htmlFor="password">Password</label><input id="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} minLength="6" required /></>}
+        {isResetting && resetStep === 2 && <>
+          <label htmlFor="reset-otp">Email OTP</label>
+          <input id="reset-otp" type="text" inputMode="numeric" pattern="[0-9]{6}" maxLength="6" value={resetOtp} onChange={(event) => setResetOtp(event.target.value.replace(/\D/g, ''))} required />
+          <label htmlFor="password">New password</label>
+          <div className="password-input-wrap">
+            <input id="password" type={showPassword ? 'text' : 'password'} value={password} onChange={(event) => setPassword(event.target.value)} minLength="6" autoComplete="new-password" required />
+            <button type="button" className="password-visibility-toggle" onClick={() => setShowPassword((visible) => !visible)} aria-label={showPassword ? 'Hide password' : 'Show password'} aria-pressed={showPassword}>
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
+        </>}
+        {!isResetting && <>
+          <label htmlFor="password">Password</label>
+          <div className="password-input-wrap">
+            <input id="password" type={showPassword ? 'text' : 'password'} value={password} onChange={(event) => setPassword(event.target.value)} minLength="6" autoComplete={isLogin ? 'current-password' : 'new-password'} required />
+            <button type="button" className="password-visibility-toggle" onClick={() => setShowPassword((visible) => !visible)} aria-label={showPassword ? 'Hide password' : 'Show password'} aria-pressed={showPassword}>
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
+        </>}
         <button type="submit" disabled={isSubmitting}>{isSubmitting ? 'Please wait...' : isResetting ? resetStep === 1 ? 'Send OTP' : 'Reset Password' : isLogin ? 'Login' : 'Register'}</button>
       </form>
 
@@ -90,7 +114,7 @@ function Auth() {
           Need an account? Register
         </button>
       </div>}
-      {!isResetting && !isLogin && <>
+      {!isResetting && <>
         <div className="auth-divider"><span>or</span></div>
         <a className="google-button" href={getGoogleAuthUrl()}>Continue with Google</a>
       </>}

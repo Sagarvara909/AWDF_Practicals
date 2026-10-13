@@ -121,14 +121,6 @@ export async function getAdminUserTasks(userId) {
   return request(`/admin/users/${userId}/tasks`)
 }
 
-export async function updateAdminUser(userId, updates) {
-  const { user } = await request(`/admin/users/${userId}`, {
-    method: 'PUT',
-    body: JSON.stringify(updates),
-  })
-  return user
-}
-
 export async function deleteAdminUser(userId) {
   const { user } = await request(`/admin/users/${userId}`, { method: 'DELETE' })
   return user

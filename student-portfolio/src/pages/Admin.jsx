@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { deleteAdminUser, getAdminUserTasks, getAdminUsers, updateAdminUser } from '../api'
+import { deleteAdminUser, getAdminUserTasks, getAdminUsers } from '../api'
 
 function formatTaskDate(value) {
   if (!value) return 'Not recorded'
@@ -106,16 +106,6 @@ function Admin() {
     }
   }, [])
 
-  async function changeUser(userId, updates) {
-    setError('')
-    try {
-      const updatedUser = await updateAdminUser(userId, updates)
-      setUsers((current) => current.map((user) => (user.id === updatedUser.id ? updatedUser : user)))
-    } catch (err) {
-      setError(err.message)
-    }
-  }
-
   async function removeUser(user) {
     if (!window.confirm(`Delete user ${user.email}? This cannot be undone.`)) return
 
@@ -161,7 +151,7 @@ function Admin() {
   return (
     <section className="page-card page-card--wide admin-page">
       <h2>Admin User Management</h2>
-      <p>Administrators can view and edit account email addresses and roles. Passwords and OTPs are never displayed.</p>
+      <p>Manage accounts by deleting users or downloading their task reports. Users update their own profile from My Profile.</p>
       {reportMessage && <p className="success-message">{reportMessage}</p>}
       {loading && <p className="help-text">Loading users...</p>}
       {error && <p className="error-message">{error}</p>}
@@ -170,35 +160,29 @@ function Admin() {
           <div className="admin-user-list">
             {users.map((user) => (
               <article className="admin-user" key={user.id}>
-                <input
-                  aria-label={`Email for ${user.email}`}
-                  type="email"
-                  defaultValue={user.email}
-                  onBlur={(event) => {
-                    if (event.target.value !== user.email) changeUser(user.id, { email: event.target.value })
-                  }}
-                />
-                <select value={user.role} onChange={(event) => {
-                  if (event.target.value === 'delete') {
-                    event.target.value = user.role
-                    removeUser(user)
-                    return
-                  }
-                  changeUser(user.id, { role: event.target.value })
-                }}>
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                  <option value="delete">Delete user</option>
-                </select>
-                <button
-                  type="button"
-                  className="btn admin-user-download"
-                  onClick={() => downloadUserTasksReport(user)}
-                  disabled={reportLoadingUserId !== null}
-                  aria-label={`Download task PDF for ${user.email}`}
-                >
-                  {reportLoadingUserId === user.id ? 'Preparing...' : 'Download PDF'}
-                </button>
+                <div className="admin-user-details">
+                  <strong>{user.username || user.email.split('@')[0]}</strong>
+                  <span className="admin-user-role">{user.role}</span>
+                </div>
+                <div className="admin-user-actions">
+                  <button
+                    type="button"
+                    className="btn admin-user-delete"
+                    onClick={() => removeUser(user)}
+                    aria-label={`Delete ${user.email}`}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    type="button"
+                    className="btn admin-user-download"
+                    onClick={() => downloadUserTasksReport(user)}
+                    disabled={reportLoadingUserId !== null}
+                    aria-label={`Download task PDF for ${user.email}`}
+                  >
+                    {reportLoadingUserId === user.id ? 'Preparing...' : 'Download PDF'}
+                  </button>
+                </div>
               </article>
             ))}
           </div>

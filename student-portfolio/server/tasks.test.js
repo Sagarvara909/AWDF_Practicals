@@ -30,7 +30,7 @@ async function getAuthToken(baseUrl, email = 'task-user@example.com', password =
   await fetch(`${baseUrl}/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ email, username: email.split('@')[0], password }),
   }).catch(() => null)
 
   const response = await fetch(`${baseUrl}/login`, {
@@ -332,12 +332,13 @@ test('POST /register creates a user and stores a hashed password', async () => {
     const response = await fetch(`${baseUrl}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password: 'securepass123' }),
+      body: JSON.stringify({ email, username: 'Auth User', password: 'securepass123' }),
     })
 
     assert.equal(response.status, 201)
     const body = await response.json()
     assert.equal(body.user.email, email)
+    assert.equal(body.user.username, 'Auth User')
     assert.notEqual(body.user.password, 'securepass123')
   } finally {
     await new Promise((resolve) => server.close(resolve))
@@ -351,7 +352,7 @@ test('POST /login returns a JWT for valid credentials and /me returns current us
     await fetch(`${baseUrl}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'login-user@example.com', password: 'securepass123' }),
+      body: JSON.stringify({ email: 'login-user@example.com', username: 'Login User', password: 'securepass123' }),
     })
 
     const loginResponse = await fetch(`${baseUrl}/login`, {
@@ -376,7 +377,7 @@ test('POST /login returns a JWT for valid credentials and /me returns current us
   }
 })
 
-test('admin users can manage users while regular users only access their own profile', async () => {
+test('admin cannot edit user profiles and regular users can update their own profile', async () => {
   const { server, baseUrl } = await startServer()
 
   try {
@@ -392,6 +393,14 @@ test('admin users can manage users while regular users only access their own pro
     assert.ok(adminBody.users.some((user) => user.email === 'regular-role@example.com' && user.role === 'user'))
     assert.ok(adminBody.users.every((user) => !('password' in user) && !('resetOtpHash' in user)))
 
+    const regularUser = adminBody.users.find((user) => user.email === 'regular-role@example.com')
+    const adminEditResponse = await fetch(`${baseUrl}/admin/users/${regularUser.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken}` },
+      body: JSON.stringify({ email: 'admin-edited@example.com', role: 'admin' }),
+    })
+    assert.equal(adminEditResponse.status, 403)
+
     const regularResponse = await fetch(`${baseUrl}/admin/users`, {
       headers: { Authorization: `Bearer ${userToken}` },
     })
@@ -403,6 +412,17 @@ test('admin users can manage users while regular users only access their own pro
     const profileBody = await profileResponse.json()
     assert.equal(profileBody.user.email, 'regular-role@example.com')
     assert.equal(profileBody.user.role, 'user')
+
+    const ownProfileEmail = `regular-role-${Date.now()}@example.com`
+    const profileUpdateResponse = await fetch(`${baseUrl}/me`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${userToken}` },
+      body: JSON.stringify({ email: ownProfileEmail, username: 'Updated Regular User' }),
+    })
+    assert.equal(profileUpdateResponse.status, 200)
+    const updatedProfileBody = await profileUpdateResponse.json()
+    assert.equal(updatedProfileBody.user.email, ownProfileEmail)
+    assert.equal(updatedProfileBody.user.username, 'Updated Regular User')
   } finally {
     await new Promise((resolve) => server.close(resolve))
   }
@@ -525,7 +545,7 @@ test('POST /forgot-password and /reset-password update the account password', as
     await fetch(`${baseUrl}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password: 'oldpass123' }),
+      body: JSON.stringify({ email, username: 'Reset User', password: 'oldpass123' }),
     })
 
     const requestResponse = await fetch(`${baseUrl}/forgot-password`, {

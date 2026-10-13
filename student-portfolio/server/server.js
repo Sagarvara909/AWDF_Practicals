@@ -36,6 +36,7 @@ const taskSchema = new mongoose.Schema(
 const userSchema = new mongoose.Schema(
   {
     email: { type: String, required: true, unique: true, trim: true, lowercase: true },
+    username: { type: String, trim: true, default: '' },
     password: { type: String, required: true },
     role: { type: String, enum: USER_ROLES, default: 'user' },
     resetOtpHash: { type: String, default: null },
@@ -108,6 +109,7 @@ function normalizeUser(user) {
   return {
     id: user._id ? user._id.toString() : String(user.id),
     email: user.email,
+    username: user.username?.trim() || user.email.split('@')[0],
     role: user.email === getAdminEmail() ? 'admin' : 'user',
   }
 }
@@ -436,20 +438,22 @@ async function deleteUser(id) {
   return normalizeUser(user)
 }
 
-async function createUser(email, passwordHash, role = 'user') {
+async function createUser(email, passwordHash, username, role = 'user') {
   const normalizedEmail = String(email).trim().toLowerCase()
+  const normalizedUsername = String(username || normalizedEmail.split('@')[0]).trim()
   const normalizedRole = USER_ROLES.includes(role) ? role : 'user'
 
   await connectToMongo()
 
   if (mongoReady) {
-    const user = await UserModel.create({ email: normalizedEmail, password: passwordHash, role: normalizedRole })
+    const user = await UserModel.create({ email: normalizedEmail, username: normalizedUsername, password: passwordHash, role: normalizedRole })
     return user.toObject ? user.toObject() : user
   }
 
   const user = {
     id: Date.now(),
     email: normalizedEmail,
+    username: normalizedUsername,
     password: passwordHash,
     role: normalizedRole,
   }
@@ -660,7 +664,7 @@ async function resetPassword(email, otp, passwordHash) {
 }
 
 function validateRegisterInput(req, res, next) {
-  const { email, password } = req.body || {}
+  const { email, password, username } = req.body || {}
 
   if (!email || typeof email !== 'string' || !email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
     return res.status(400).json({ error: 'Valid email is required' })
@@ -668,6 +672,10 @@ function validateRegisterInput(req, res, next) {
 
   if (!password || typeof password !== 'string' || password.trim().length < 6) {
     return res.status(400).json({ error: 'Password must be at least 6 characters long' })
+  }
+
+  if (typeof username !== 'string' || !username.trim() || username.trim().length > 60) {
+    return res.status(400).json({ error: 'Username is required and must be 60 characters or fewer' })
   }
 
   next()
@@ -777,7 +785,7 @@ function createApp() {
   })
 
   app.post('/register', validateRegisterInput, async (req, res) => {
-    const { email, password } = req.body || {}
+    const { email, password, username } = req.body || {}
     const existingUser = await findUserByEmail(email)
 
     if (existingUser) {
@@ -786,7 +794,7 @@ function createApp() {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
-    const savedUser = await createUser(email, hashedPassword, email.toLowerCase() === getAdminEmail() ? 'admin' : 'user')
+    const savedUser = await createUser(email, hashedPassword, username, email.toLowerCase() === getAdminEmail() ? 'admin' : 'user')
     await recordAuthEvent({ req, event: 'register', provider: 'password', outcome: 'success', email, userId: savedUser._id || savedUser.id })
     await notifyAdminActivity({ event: 'user registered', userEmail: email, details: 'A new account was created.' })
 
@@ -884,7 +892,7 @@ function createApp() {
       const event = user ? 'login' : 'register'
       if (!user) {
         const unusablePassword = await bcrypt.hash(randomBytes(32).toString('hex'), 10)
-        user = await createUser(profile.email, unusablePassword, profile.email.toLowerCase() === getAdminEmail() ? 'admin' : 'user')
+        user = await createUser(profile.email, unusablePassword, profile.name || profile.email.split('@')[0], profile.email.toLowerCase() === getAdminEmail() ? 'admin' : 'user')
       }
 
       await recordAuthEvent({ req, event, provider: 'google', outcome: 'success', email: profile.email, userId: user._id || user.id })
@@ -951,9 +959,13 @@ function createApp() {
   })
 
   app.put('/me', authMiddleware, async (req, res) => {
-    const { email } = req.body || {}
+    const { email, username } = req.body || {}
     if (typeof email !== 'string' || !email.trim() || !/^\S+@\S+\.\S+$/.test(email.trim())) {
       return res.status(400).json({ error: 'A valid email is required' })
+    }
+
+    if (username !== undefined && (typeof username !== 'string' || !username.trim() || username.trim().length > 60)) {
+      return res.status(400).json({ error: 'Username is required and must be 60 characters or fewer' })
     }
 
     const normalizedEmail = email.trim().toLowerCase()
@@ -962,7 +974,11 @@ function createApp() {
       return res.status(409).json({ error: 'Email is already in use' })
     }
 
-    const user = await updateUser(req.user.id, { email: normalizedEmail })
+    const updates = { email: normalizedEmail }
+    if (username !== undefined) {
+      updates.username = username.trim()
+    }
+    const user = await updateUser(req.user.id, updates)
     if (!user) {
       return res.status(404).json({ error: 'User not found' })
     }
@@ -998,39 +1014,7 @@ function createApp() {
   })
 
   app.put('/admin/users/:id', async (req, res) => {
-    const { email, role } = req.body || {}
-    const updates = {}
-
-    if (email !== undefined) {
-      if (typeof email !== 'string' || !/^\S+@\S+\.\S+$/.test(email.trim())) {
-        return res.status(400).json({ error: 'A valid email is required' })
-      }
-      updates.email = email.trim().toLowerCase()
-    }
-
-    if (role !== undefined) {
-      if (!USER_ROLES.includes(role)) {
-        return res.status(400).json({ error: 'Role must be admin or user' })
-      }
-      updates.role = role
-    }
-
-    if (!Object.keys(updates).length) {
-      return res.status(400).json({ error: 'No user changes supplied' })
-    }
-
-    const updatedUser = await updateUser(req.params.id, updates)
-    if (!updatedUser) {
-      return res.status(404).json({ error: 'User not found' })
-    }
-
-    await notifyAdminActivity({
-      event: 'admin user record updated',
-      userEmail: updatedUser.email,
-      details: `Updated user ${updatedUser.email}: ${JSON.stringify(updates)}`,
-    })
-
-    res.status(200).json({ user: updatedUser })
+    res.status(403).json({ error: 'Users can only update their own profile' })
   })
 
   app.delete('/admin/users/:id', async (req, res) => {

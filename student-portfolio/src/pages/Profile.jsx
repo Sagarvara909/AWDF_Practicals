@@ -150,6 +150,7 @@ function addActivityTable(pdf, history, startY) {
 }
 
 function Profile() {
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [role, setRole] = useState('user')
   const [message, setMessage] = useState('')
@@ -160,6 +161,7 @@ function Profile() {
   useEffect(() => {
     getCurrentUser()
       .then((user) => {
+        setUsername(user.username || user.email.split('@')[0])
         setEmail(user.email)
         setRole(user.role)
       })
@@ -173,7 +175,8 @@ function Profile() {
     setMessage('')
 
     try {
-      const user = await updateCurrentUser({ email })
+      const user = await updateCurrentUser({ email, username })
+      setUsername(user.username)
       setEmail(user.email)
       setMessage('Your profile was updated.')
     } catch (err) {
@@ -222,6 +225,8 @@ function Profile() {
       {loading ? <p className="help-text">Loading profile...</p> : (
         <>
           <form className="auth-form" onSubmit={saveProfile}>
+            <label htmlFor="profile-username">User name</label>
+            <input id="profile-username" type="text" value={username} onChange={(event) => setUsername(event.target.value)} maxLength="60" required />
             <label htmlFor="profile-email">Email</label>
             <input id="profile-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
             <label htmlFor="profile-role">Role</label>
