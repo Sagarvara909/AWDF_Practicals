@@ -114,6 +114,166 @@
       ]
     },
     {
+      "name": "Practical 10 - Event-Driven Processing",
+      "description": "Run this folder in Collection Runner. It logs in, records the current event counters, creates one task, then polls until the task:created event has finished processing.",
+      "item": [
+        {
+          "name": "1. Login user (save JWT for Practical 10)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login succeeds and returns a JWT', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.token).to.be.a('string').and.not.empty;",
+                  "    pm.collectionVariables.set('userToken', body.token);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/login"
+          }
+        },
+        {
+          "name": "2. Record event counters before task creation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Event diagnostics are available', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.event).to.eql('task:created');",
+                  "    pm.collectionVariables.set('practical10BaselineEmitted', String(body.emitted));",
+                  "    pm.collectionVariables.set('practical10BaselineProcessed', String(body.processed));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{userToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/debug/events"
+          }
+        },
+        {
+          "name": "3. Create task and emit task:created",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const title = `Practical 10 event test ${Date.now()}`;",
+                  "pm.collectionVariables.set('practical10TaskTitle', title);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Task is created successfully', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.task.title).to.eql(pm.collectionVariables.get('practical10TaskTitle'));",
+                  "    pm.collectionVariables.set('practical10TaskId', String(body.task.id || body.task._id));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{userToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"{{practical10TaskTitle}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/tasks"
+          }
+        },
+        {
+          "name": "4. Verify task:created was processed",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "await new Promise((resolve) => setTimeout(resolve, 500));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "const expectedEmitted = Number(pm.collectionVariables.get('practical10BaselineEmitted')) + 1;",
+                  "const expectedProcessed = Number(pm.collectionVariables.get('practical10BaselineProcessed')) + 1;",
+                  "const attempts = Number(pm.collectionVariables.get('practical10PollAttempts') || 0) + 1;",
+                  "pm.collectionVariables.set('practical10PollAttempts', String(attempts));",
+                  "if (body.emitted >= expectedEmitted && body.processed >= expectedProcessed && body.pending === 0) {",
+                  "    pm.test('task:created event was emitted and processed', function () {",
+                  "        pm.response.to.have.status(200);",
+                  "        pm.expect(body.event).to.eql('task:created');",
+                  "        pm.expect(body.emitted).to.be.at.least(expectedEmitted);",
+                  "        pm.expect(body.processed).to.be.at.least(expectedProcessed);",
+                  "        pm.expect(body.pending).to.eql(0);",
+                  "    });",
+                  "    pm.collectionVariables.unset('practical10PollAttempts');",
+                  "} else if (attempts < 21) {",
+                  "    pm.execution.setNextRequest('4. Verify task:created was processed');",
+                  "} else {",
+                  "    pm.test('task:created event finished processing before timeout', function () {",
+                  "        pm.expect(body.emitted, 'emitted counter').to.be.at.least(expectedEmitted);",
+                  "        pm.expect(body.processed, 'processed counter').to.be.at.least(expectedProcessed);",
+                  "        pm.expect(body.pending, 'pending counter').to.eql(0);",
+                  "    });",
+                  "    pm.collectionVariables.unset('practical10PollAttempts');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{userToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/debug/events"
+          }
+        }
+      ]
+    },
+    {
       "name": "Admin authentication logs",
       "item": [
         {
