@@ -1,0 +1,58 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: student-portfolio
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: student-portfolio/package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint
+
+  test:
+    name: Test and build
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: student-portfolio/package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run automated tests
+        run: npm test
+
+      - name: Build frontend
+        run: npm run build

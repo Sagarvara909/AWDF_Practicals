@@ -1,5 +1,7 @@
 # Student Portfolio - React + Express + MongoDB
 
+[![CI Pipeline](https://github.com/Sagarvara909/AWDF_Practicals/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Sagarvara909/AWDF_Practicals/actions/workflows/ci.yml)
+
 A modern, reusable component-based portfolio application built with React and Vite as part of ITUE301 (Advanced Web Development Frameworks) Practical 1.
 
 ## Project Overview
@@ -79,6 +81,53 @@ Useful checks:
 - `npm test` runs the Express CRUD tests.
 - `npm run build` creates the production frontend build.
 - `npm run lint` checks the project.
+
+## Practical 9: In-Memory Task Caching
+
+The Express API uses `node-cache` with a 60-second TTL for per-user `GET /tasks`
+and `GET /tasks/:id` responses. Successful task creation clears that user's
+list cache; updates and deletions clear the list and affected task detail
+entry. Cache keys are user-scoped so one account cannot receive another
+account's cached task data. `GET /debug/cache` requires authentication and
+reports process-wide hit, miss, and invalidation counters without exposing the
+cache keys.
+
+For implementation details, the cache invalidation rationale, measurement
+steps, and a table for recording three samples per condition, see
+[docs/practical-9-in-memory-caching.md](./docs/practical-9-in-memory-caching.md).
+
+## Practical 10: Asynchronous Processing with Event-Driven Architecture
+
+When a task is created, the API emits a `task:created` event. An EventEmitter
+listener records the activity and sends its notification asynchronously, so
+the task API response does not wait for that work. The authenticated
+`GET /debug/events` endpoint reports emitted, processed, pending, and failed
+event counts.
+
+For Postman steps, screenshot evidence, and the event-driven flow, see
+[docs/practical-10-event-driven-processing.md](./docs/practical-10-event-driven-processing.md).
+
+## Practical 11: Containerization with Docker and Docker Compose
+
+Docker Compose runs the React frontend, Express API, and MongoDB as separate
+services. MongoDB data is kept in a named volume. Copy `.env.example` to `.env`,
+set a private `JWT_SECRET`, then run `docker compose up --build -d`. Open the
+frontend at `http://localhost:5174`; the API is published at
+`http://localhost:5001`. These Docker host ports avoid conflicts with the
+default local development ports.
+
+See [docs/practical-11-docker-compose.md](./docs/practical-11-docker-compose.md)
+for setup, service verification, persistence notes, and screenshot guidance.
+
+## Practical 12: CI Pipeline with GitHub Actions
+
+The GitHub Actions workflow runs on pushes to `main`. It installs the
+application dependencies, runs ESLint, executes the backend integration tests,
+and builds the frontend. The test/build job runs only after lint succeeds.
+
+See [docs/practical-12-github-actions.md](./docs/practical-12-github-actions.md)
+for the workflow details, failure-and-recovery demonstration, analysis
+questions, and screenshot guidance.
 
 ## Practical 8: Performance Optimization and Lazy Loading in React
 
@@ -170,6 +219,12 @@ and `http://localhost:5000/auth/google/callback` as an authorized redirect URI.
 Copy that client's ID and secret into `GOOGLE_CLIENT_ID` and
 `GOOGLE_CLIENT_SECRET` in `.env`. Placeholder values are rejected clearly by
 the backend instead of being sent to Google.
+
+For Docker Compose, also authorize `http://localhost:5174` as a JavaScript
+origin and `http://localhost:5001/auth/google/callback` as a redirect URI.
+Set `FRONTEND_URL=http://localhost:5174` and
+`GOOGLE_REDIRECT_URI=http://localhost:5001/auth/google/callback` in `.env`,
+then recreate the backend with `docker compose up -d --force-recreate backend`.
 
 Password-based registration asks for a display name, which is shown in the
 site header instead of the account email. Google sign-in uses the name from
