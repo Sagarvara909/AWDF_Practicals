@@ -75,7 +75,7 @@ test('GET /tasks returns the initial task list', async () => {
     const response = await fetch(`${baseUrl}/tasks`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-    assert.equal(response.status, 201)
+    assert.equal(response.status, 200)
 
     const body = await response.json()
     assert.ok(Array.isArray(body.tasks))
