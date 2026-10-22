@@ -57,6 +57,13 @@ export async function createTask(task) {
   return createdTask
 }
 
+export async function generateTaskDescription(title) {
+  return request('/api/ai/generate-description', {
+    method: 'POST',
+    body: JSON.stringify({ title }),
+  })
+}
+
 export async function updateTask(taskId, updates) {
   const { task } = await request(`/tasks/${taskId}`, {
     method: 'PUT',

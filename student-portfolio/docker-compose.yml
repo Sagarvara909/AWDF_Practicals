@@ -23,6 +23,7 @@ services:
       MONGO_URI: mongodb://mongo:27017/todolist
       MONGO_DB_NAME: todolist
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env before starting Compose}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}

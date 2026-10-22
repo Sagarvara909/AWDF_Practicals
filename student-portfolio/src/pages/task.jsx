@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { createTask, deleteTask, getTasks, updateTask } from '../api'
+import { createTask, deleteTask, generateTaskDescription, getTasks, updateTask } from '../api'
 import './Task.css'
 import Toast from './Toast'
 import DelayedFallback from './DelayedFallback'
@@ -12,11 +12,14 @@ function Task() {
   const navigate = useNavigate()
   const [tasks, setTasks] = useState([])
   const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
   const [editingTask, setEditingTask] = useState(null)
   const [status, setStatus] = useState('loading')
   const [error, setError] = useState('')
   const [toast, setToast] = useState(null)
   const [showAnalytics, setShowAnalytics] = useState(false)
+  const [aiStatus, setAiStatus] = useState('idle')
+  const [aiMessage, setAiMessage] = useState('')
 
   useEffect(() => {
     async function loadTasks() {
@@ -50,15 +53,25 @@ function Task() {
 
     try {
       if (editingTask) {
-        const updatedTask = await updateTask(editingTask.id, { title: title.trim() })
+        const updatedTask = await updateTask(editingTask.id, { title: title.trim(), description: description.trim() })
         setTasks((current) => current.map((item) => (item.id === editingTask.id ? updatedTask : item)))
         setEditingTask(null)
         setToast({ message: 'Task updated successfully.', type: 'success' })
       } else {
-        const optimisticTask = { id: `pending-${Date.now()}`, title: title.trim(), completed: false, status: 'pending' }
+        const optimisticTask = {
+          id: `pending-${Date.now()}`,
+          title: title.trim(),
+          description: description.trim(),
+          completed: false,
+          status: 'pending',
+        }
         setTasks((current) => [...current, optimisticTask])
         try {
-          const createdTask = await createTask({ title: optimisticTask.title, status: 'pending' })
+          const createdTask = await createTask({
+            title: optimisticTask.title,
+            description: optimisticTask.description,
+            status: 'pending',
+          })
           setTasks((current) => current.map((item) => (item.id === optimisticTask.id ? createdTask : item)))
           setToast({ message: 'Task created successfully.', type: 'success' })
         } catch (err) {
@@ -68,6 +81,8 @@ function Task() {
       }
 
       setTitle('')
+      setDescription('')
+      setAiMessage('')
     } catch (err) {
       if (err.status === 401) {
         navigate('/login', { state: { message: 'Your session has expired. Please log in again.' } })
@@ -83,13 +98,40 @@ function Task() {
   function startEdit(task) {
     setEditingTask(task)
     setTitle(task.title)
+    setDescription(task.description || '')
     setError('')
+    setAiMessage('')
   }
 
   function cancelEdit() {
     setEditingTask(null)
     setTitle('')
+    setDescription('')
     setError('')
+    setAiMessage('')
+  }
+
+  async function suggestDescription() {
+    setAiStatus('loading')
+    setAiMessage('')
+
+    try {
+      const result = await generateTaskDescription(title.trim())
+      if (result.fallback) {
+        setAiMessage(result.message)
+      } else {
+        setDescription(result.description)
+        setAiMessage(`AI-generated suggestion (${result.model}). Review and edit it before saving.`)
+      }
+    } catch (err) {
+      if (err.status === 401) {
+        navigate('/login', { state: { message: 'Your session has expired. Please log in again.' } })
+        return
+      }
+      setAiMessage(err.message || 'AI suggestions are unavailable. You can still write and save the task yourself.')
+    } finally {
+      setAiStatus('idle')
+    }
   }
 
   async function removeTask(task) {
@@ -181,13 +223,37 @@ function Task() {
     <section className="task-page">
       <h2>Task Manager</h2>
 
-      <form onSubmit={saveTask}>
+      <form className="task-form" onSubmit={saveTask}>
         <input
+          className="task-title-input"
           type="text"
           value={title}
           placeholder="Add a new task"
           onChange={(event) => setTitle(event.target.value)}
         />
+        <div className="description-input">
+          <textarea
+            className="task-description-input"
+            value={description}
+            placeholder="Task description (optional)"
+            onChange={(event) => setDescription(event.target.value)}
+            maxLength={1000}
+            aria-label="Task description"
+          />
+          <button
+            type="button"
+            className="ai-suggest-btn"
+            onClick={suggestDescription}
+            disabled={!title.trim() || aiStatus === 'loading'}
+          >
+            {aiStatus === 'loading' ? 'Generating...' : 'Generate description'}
+          </button>
+          {aiMessage && <p className="ai-message" role="status">{aiMessage}</p>}
+          <p className="ai-disclaimer">
+            AI-generated suggestions may be inaccurate. Review and edit before saving.
+            Do not enter personal or sensitive information.
+          </p>
+        </div>
         <div className="form-actions">
           <button type="submit">{isEditing ? 'Save Task' : 'Add Task'}</button>
           {isEditing && (
@@ -214,9 +280,12 @@ function Task() {
               {column.tasks.length === 0 && <li className="empty-column">No tasks here</li>}
               {column.tasks.map((task) => (
                 <li key={task.id} className="task-card">
-                  <button type="button" className="task-title" onClick={() => toggleTask(task)} disabled={status === 'loading'}>
-                    <span className={task.completed ? 'completed' : ''}>{task.title}</span>
-                  </button>
+                  <div className="task-card-content">
+                    <button type="button" className="task-title" onClick={() => toggleTask(task)} disabled={status === 'loading'}>
+                      <span className={task.completed ? 'completed' : ''}>{task.title}</span>
+                    </button>
+                    {task.description && <p className="task-description">{task.description}</p>}
+                  </div>
                   <select
                     className={`task-status status-${task.status || (task.completed ? 'completed' : 'pending')}`}
                     value={task.status || (task.completed ? 'completed' : 'pending')}

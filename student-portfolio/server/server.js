@@ -42,6 +42,7 @@ const taskSchema = new mongoose.Schema(
   {
     ownerId: { type: String, required: true, index: true },
     title: { type: String, required: true, trim: true },
+    description: { type: String, trim: true, default: '' },
     completed: { type: Boolean, default: false },
     status: { type: String, enum: TASK_STATUSES, default: 'pending' },
   },
@@ -113,6 +114,7 @@ function normalizeTask(task) {
   return {
     id: task._id ? task._id.toString() : String(task.id),
     title: task.title,
+    description: task.description || '',
     completed: status === 'completed',
     status,
     createdAt: task.createdAt || null,
@@ -277,11 +279,11 @@ async function listTasks(ownerId) {
     .map((task) => ({ ...task }))
 }
 
-async function createTask(ownerId, title, status = 'pending') {
+async function createTask(ownerId, title, status = 'pending', description = '') {
   await connectToMongo()
 
   if (mongoReady) {
-    const task = await TaskModel.create({ ownerId, title, status, completed: status === 'completed' })
+    const task = await TaskModel.create({ ownerId, title, description, status, completed: status === 'completed' })
     return normalizeTask(task.toObject ? task.toObject() : task)
   }
 
@@ -289,6 +291,7 @@ async function createTask(ownerId, title, status = 'pending') {
     id: Date.now(),
     ownerId,
     title,
+    description,
     completed: status === 'completed',
     status,
     createdAt: new Date(),
@@ -350,6 +353,10 @@ async function updateTask(ownerId, taskId, updates) {
 
   if (updates.title !== undefined) {
     memoryTasks[index].title = updates.title
+  }
+
+  if (updates.description !== undefined) {
+    memoryTasks[index].description = updates.description
   }
 
   if (updates.completed !== undefined) {
@@ -772,7 +779,7 @@ function validatePasswordReset(req, res, next) {
 }
 
 function validateTaskInput(req, res, next) {
-  const { title, status } = req.body || {}
+  const { title, description, status } = req.body || {}
 
   if (req.method === 'POST' && (!title || typeof title !== 'string' || !title.trim())) {
     return res.status(400).json({ error: 'Task title is required' })
@@ -780,6 +787,10 @@ function validateTaskInput(req, res, next) {
 
   if (req.method === 'PUT' && title !== undefined && (typeof title !== 'string' || !title.trim())) {
     return res.status(400).json({ error: 'Task title is required' })
+  }
+
+  if (description !== undefined && (typeof description !== 'string' || description.length > 1000)) {
+    return res.status(400).json({ error: 'Task description must be text with at most 1000 characters' })
   }
 
   if (status !== undefined && !TASK_STATUSES.includes(status)) {
@@ -814,8 +825,9 @@ function adminMiddleware(req, res, next) {
   next()
 }
 
-function createApp({ cacheEnabled = true } = {}) {
+function createApp({ cacheEnabled = true, aiFetch = fetch, aiApiKey = process.env.GEMINI_API_KEY } = {}) {
   const app = express()
+  const aiRequestTimes = new Map()
 
   app.use(cors())
   app.use(express.json())
@@ -1094,6 +1106,109 @@ function createApp({ cacheEnabled = true } = {}) {
     res.status(200).json({ history })
   })
 
+  app.post('/api/ai/generate-description', authMiddleware, async (req, res) => {
+    const { title } = req.body || {}
+    if (typeof title !== 'string' || !title.trim() || title.trim().length > 200) {
+      return res.status(400).json({ error: 'Task title must be between 1 and 200 characters' })
+    }
+
+    const normalizedTitle = title.trim()
+    const rateLimitKey = `${req.user.id}:${normalizedTitle.toLowerCase()}`
+    const now = Date.now()
+    for (const [key, requestTime] of aiRequestTimes) {
+      if (now - requestTime >= 60_000) aiRequestTimes.delete(key)
+    }
+
+    if (!aiApiKey) {
+      return res.status(200).json({
+        description: '',
+        fallback: true,
+        message: 'AI suggestions are unavailable. You can still write and save the task yourself.',
+      })
+    }
+
+    const previousRequestTime = aiRequestTimes.get(rateLimitKey)
+    if (previousRequestTime && now - previousRequestTime < 60_000) {
+      return res.status(429).json({
+        error: 'You can request another suggestion for this task in one minute.',
+      })
+    }
+
+    try {
+      const input = `Write one concise, practical task description (one or two sentences) for this task. Do not request or include personal or sensitive information.\n\nTask title: ${normalizedTitle}`
+      const models = ['gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-3.1-pro-preview']
+      const fallbackStatuses = new Set([404, 500, 502, 503, 504])
+      const modelErrors = []
+
+      for (const model of models) {
+        const response = await aiFetch(
+          'https://generativelanguage.googleapis.com/v1beta/interactions',
+          {
+            method: 'POST',
+            headers: {
+              'x-goog-api-key': aiApiKey,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ model, input }),
+            signal: AbortSignal.timeout(15_000),
+          },
+        )
+
+        if (!response.ok) {
+          const providerError = (await response.text()).slice(0, 500) || 'No error details'
+          const error = `Gemini ${model} returned ${response.status}: ${providerError}`
+          if (fallbackStatuses.has(response.status)) {
+            modelErrors.push(error)
+            continue
+          }
+          throw new Error(error)
+        }
+
+        const result = await response.json()
+        const description = result.steps
+          ?.filter((step) => step.type === 'model_output')
+          .flatMap((step) => step.content || [])
+          .filter((part) => part.type === 'text')
+          .map((part) => part.text || '')
+          .join('\n')
+          .trim()
+        if (!description) {
+          modelErrors.push(`Gemini ${model} returned no text description`)
+          continue
+        }
+
+        aiRequestTimes.set(rateLimitKey, Date.now())
+        return res.status(200).json({ description, fallback: false, model })
+      }
+
+      throw new Error(modelErrors.join(' | ') || 'All configured Gemini models failed')
+    } catch (error) {
+      console.warn('AI task description unavailable:', error.message)
+      aiRequestTimes.delete(rateLimitKey)
+      const statusCode = Number(error.message.match(/returned (\d{3})/)?.[1]) || null
+      let message = 'Gemini could not generate a description right now. Try again later, or write and save the task yourself.'
+
+      if (statusCode === 400) {
+        message = 'Gemini rejected the request (400). Check the backend request format and model settings.'
+      } else if (statusCode === 401 || statusCode === 403) {
+        message = `Gemini rejected the API key or its access (${statusCode}). Check GEMINI_API_KEY and the key’s AI Studio project access.`
+      } else if (statusCode === 404) {
+        message = 'Gemini could not find an available model (404). Check the configured model names and API version.'
+      } else if (statusCode === 429) {
+        message = 'Gemini quota or rate limit reached (429). Check AI Studio usage and quota before trying again.'
+      } else if (statusCode === 503 || statusCode === 502 || statusCode === 504) {
+        message = `Gemini service is unavailable right now (${statusCode}). This is a provider-side error; try later or use the manual description field.`
+      }
+
+      return res.status(200).json({
+        description: '',
+        fallback: true,
+        errorCode: statusCode,
+        message,
+      })
+    }
+  })
+
   app.use(['/tasks', '/api/todos'], authMiddleware)
 
   // ── Practical 9: GET /tasks with in-memory caching ────────────────────
@@ -1148,8 +1263,13 @@ function createApp({ cacheEnabled = true } = {}) {
 
   // ── POST /tasks with cache invalidation ───────────────────────────────
   app.post(['/tasks', '/api/todos'], validateTaskInput, async (req, res) => {
-    const { title, status = 'pending', completed = false } = req.body || {}
-    const task = await createTask(req.user.id, String(title).trim(), status || (completed ? 'completed' : 'pending'))
+    const { title, description = '', status = 'pending', completed = false } = req.body || {}
+    const task = await createTask(
+      req.user.id,
+      String(title).trim(),
+      status || (completed ? 'completed' : 'pending'),
+      String(description).trim(),
+    )
 
     // Invalidate the all-tasks cache so stale data is never served
     invalidateUserTaskCache(req.user.id)
@@ -1165,11 +1285,18 @@ function createApp({ cacheEnabled = true } = {}) {
 
   // ── PUT /tasks/:id with cache invalidation ────────────────────────────
   app.put(['/tasks/:id', '/api/todos/:id'], validateTaskInput, async (req, res) => {
-    const { title, completed, status } = req.body || {}
+    const { title, description, completed, status } = req.body || {}
     const updates = {}
 
     if (title !== undefined) {
       updates.title = String(title).trim()
+    }
+
+    if (description !== undefined) {
+      if (typeof description !== 'string') {
+        return res.status(400).json({ error: 'Task description must be text' })
+      }
+      updates.description = description.trim()
     }
 
     if (completed !== undefined) {

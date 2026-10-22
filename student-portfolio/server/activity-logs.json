@@ -6468,5 +6468,14 @@
     "userId": "6ac3c0a9939a951d8d14845d",
     "details": "Task: Student portfolio project; Status: pending -> completed.",
     "createdAt": "2026-10-17T09:30:16.378Z"
+  },
+  {
+    "event": "task created",
+    "provider": "activity",
+    "outcome": "success",
+    "email": "hradmin1211@gmail.com",
+    "userId": "6ac3c1d0939a951d8d14845f",
+    "details": "Task: learn advance java; Status: pending.",
+    "createdAt": "2026-10-22T10:20:03.638Z"
   }
 ]

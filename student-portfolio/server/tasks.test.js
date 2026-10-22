@@ -85,6 +85,193 @@ test('GET /tasks returns the initial task list', async () => {
   }
 })
 
+test('AI task description suggestions are authenticated, editable, and rate limited', async () => {
+  let providerCalls = 0
+  let providerRequest
+  let providerUrl
+  const app = createApp({
+    aiApiKey: 'test-server-key',
+    aiFetch: async (url, options) => {
+      providerCalls += 1
+      providerUrl = url
+      providerRequest = options
+      return new Response(JSON.stringify({
+        steps: [{
+          type: 'model_output',
+          content: [{ type: 'text', text: 'Prepare the report and share it with the team.' }],
+        }],
+      }), { status: 200, headers: { 'Content-Type': 'application/json' } })
+    },
+  })
+  const { server, baseUrl } = await startServer(app)
+
+  try {
+    const anonymousResponse = await fetch(`${baseUrl}/api/ai/generate-description`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: 'Prepare weekly report' }),
+    })
+    assert.equal(anonymousResponse.status, 401)
+
+    const token = await getAuthToken(baseUrl, `ai-user-${Date.now()}@example.com`)
+    const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+    const suggestionResponse = await fetch(`${baseUrl}/api/ai/generate-description`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ title: 'Prepare weekly report' }),
+    })
+    const suggestion = await suggestionResponse.json()
+    assert.equal(suggestionResponse.status, 200)
+    assert.equal(suggestion.description, 'Prepare the report and share it with the team.')
+    assert.equal(suggestion.fallback, false)
+    assert.equal(suggestion.model, 'gemini-3.5-flash-lite')
+    assert.equal(JSON.stringify(suggestion).includes('test-server-key'), false)
+    assert.equal(providerRequest.headers['x-goog-api-key'], 'test-server-key')
+    assert.ok(providerRequest.signal)
+    assert.equal(providerUrl, 'https://generativelanguage.googleapis.com/v1beta/interactions')
+    assert.equal(JSON.parse(providerRequest.body).model, 'gemini-3.5-flash-lite')
+    assert.match(JSON.parse(providerRequest.body).input, /Prepare weekly report/)
+
+    const limitedResponse = await fetch(`${baseUrl}/api/ai/generate-description`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ title: 'Prepare weekly report' }),
+    })
+    assert.equal(limitedResponse.status, 429)
+    assert.equal(providerCalls, 1)
+
+    const createResponse = await fetch(`${baseUrl}/tasks`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        title: 'Prepare weekly report',
+        description: suggestion.description,
+      }),
+    })
+    const created = await createResponse.json()
+    assert.equal(createResponse.status, 201)
+    assert.equal(created.task.description, suggestion.description)
+  } finally {
+    await new Promise((resolve) => server.close(resolve))
+  }
+})
+
+test('AI description failures return a fallback and do not block task creation', async () => {
+  const app = createApp({
+    aiApiKey: 'test-invalid-key',
+    aiFetch: async () => {
+      throw new Error('Provider unavailable')
+    },
+  })
+  const { server, baseUrl } = await startServer(app)
+
+  try {
+    const token = await getAuthToken(baseUrl, `ai-fallback-${Date.now()}@example.com`)
+    const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+    const suggestionResponse = await fetch(`${baseUrl}/api/ai/generate-description`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ title: 'Write project notes' }),
+    })
+    const suggestion = await suggestionResponse.json()
+    assert.equal(suggestionResponse.status, 200)
+    assert.equal(suggestion.fallback, true)
+    assert.equal(suggestion.description, '')
+    assert.match(suggestion.message, /write and save the task yourself/)
+
+    const createResponse = await fetch(`${baseUrl}/tasks`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        title: 'Write project notes',
+        description: 'Manually written task description.',
+      }),
+    })
+    const created = await createResponse.json()
+    assert.equal(createResponse.status, 201)
+    assert.equal(created.task.description, 'Manually written task description.')
+  } finally {
+    await new Promise((resolve) => server.close(resolve))
+  }
+})
+
+test('AI description generation without an API key returns a fallback without calling the provider', async () => {
+  let providerCalled = false
+  const app = createApp({
+    aiApiKey: '',
+    aiFetch: async () => {
+      providerCalled = true
+      throw new Error('Provider must not be called without a key')
+    },
+  })
+  const { server, baseUrl } = await startServer(app)
+
+  try {
+    const token = await getAuthToken(baseUrl, `ai-no-key-${Date.now()}@example.com`)
+    const response = await fetch(`${baseUrl}/api/ai/generate-description`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ title: 'Write project notes' }),
+    })
+    const fallback = await response.json()
+
+    assert.equal(response.status, 200)
+    assert.equal(fallback.fallback, true)
+    assert.equal(providerCalled, false)
+  } finally {
+    await new Promise((resolve) => server.close(resolve))
+  }
+})
+
+test('AI description falls back across Gemini models after temporary model failures', async () => {
+  let providerCalls = 0
+  const providerModels = []
+  const app = createApp({
+    aiApiKey: 'test-server-key',
+    aiFetch: async (_url, options) => {
+      providerCalls += 1
+      providerModels.push(JSON.parse(options.body).model)
+      if (providerCalls < 3) {
+        return new Response(JSON.stringify({ error: { message: 'Service unavailable' } }), { status: 503 })
+      }
+      return new Response(JSON.stringify({
+        steps: [{
+          type: 'model_output',
+          content: [{ type: 'text', text: 'Review Java concepts and complete a short practice exercise.' }],
+        }],
+      }), { status: 200, headers: { 'Content-Type': 'application/json' } })
+    },
+  })
+  const { server, baseUrl } = await startServer(app)
+
+  try {
+    const token = await getAuthToken(baseUrl, `ai-retry-${Date.now()}@example.com`)
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ title: 'Learn advanced Java' }),
+    }
+
+    const recoveredResponse = await fetch(`${baseUrl}/api/ai/generate-description`, options)
+    const recovered = await recoveredResponse.json()
+    assert.equal(recoveredResponse.status, 200)
+    assert.equal(recovered.fallback, false)
+    assert.equal(recovered.model, 'gemini-3.1-pro-preview')
+    assert.match(recovered.description, /Java/)
+    assert.deepEqual(providerModels, [
+      'gemini-3.5-flash-lite',
+      'gemini-3.8-flash',
+      'gemini-3.1-pro-preview',
+    ])
+
+    const limitedResponse = await fetch(`${baseUrl}/api/ai/generate-description`, options)
+    assert.equal(limitedResponse.status, 429)
+    assert.equal(providerCalls, 3)
+  } finally {
+    await new Promise((resolve) => server.close(resolve))
+  }
+})
+
 test('task responses are cached and writes invalidate list and detail entries', async () => {
   const { server, baseUrl } = await startServer()
   const { server: uncachedServer, baseUrl: uncachedBaseUrl } = await startServer(createApp({ cacheEnabled: false }))

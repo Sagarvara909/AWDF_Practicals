@@ -100,3 +100,73 @@
   box-shadow: 0 6px 16px rgba(23, 55, 47, 0.1);
 }
 
+.task-page .description-input {
+  display: grid;
+  gap: 8px;
+}
+
+.task-page .task-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  margin: 24px 0;
+}
+
+.task-page .task-title-input,
+.task-page .task-description-input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+
+.task-page .description-input textarea {
+  min-height: 88px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  color: var(--ink);
+  background: var(--surface-muted);
+  font: inherit;
+  resize: vertical;
+}
+
+.task-page .task-title-input {
+  min-height: 48px;
+}
+
+.task-page .ai-suggest-btn {
+  justify-self: start;
+  color: var(--forest-deep);
+  background: var(--lime-soft);
+}
+
+.task-page .task-form .form-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.task-page .ai-message,
+.task-page .ai-disclaimer,
+.task-page .task-description {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: .88rem;
+  line-height: 1.5;
+}
+
+.task-page .ai-message {
+  color: var(--forest);
+  font-weight: 700;
+}
+
+.task-page .task-card-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.task-page .task-description {
+  padding: 0 8px;
+  overflow-wrap: anywhere;
+}

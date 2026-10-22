@@ -58,6 +58,12 @@ The task page supports create, read, edit, completion updates, and delete.
 Create is optimistic and rolls back if the API rejects it. Write operations
 show success or error toasts, and delete requires confirmation.
 
+The task form can request an optional AI-generated description. The Gemini key
+is read by the backend from `GEMINI_API_KEY` in `.env`; the key is never sent to
+the browser. Without a key or if the AI service is unavailable, tasks can still
+be created and edited with a manually written description. Review AI text
+before saving and do not send personal or sensitive data to an external model.
+
 Authentication is available at `/login`. Register a user, log in, and the
 frontend stores the JWT in local storage and sends it with every task request.
 The task routes are protected by the Express authentication middleware. A
@@ -128,6 +134,16 @@ and builds the frontend. The test/build job runs only after lint succeeds.
 See [docs/practical-12-github-actions.md](./docs/practical-12-github-actions.md)
 for the workflow details, failure-and-recovery demonstration, analysis
 questions, and screenshot guidance.
+
+## Practical 13: AI API Integration
+
+The task form can generate an editable description suggestion through an
+authenticated Express endpoint. The Gemini key stays server-side, requests
+have a per-user/per-title one-minute limit, and AI failures do not block normal
+task creation.
+
+See [docs/practical-13-ai-api-integration.md](./docs/practical-13-ai-api-integration.md)
+for key setup, testing, failure handling, and responsible-AI considerations.
 
 ## Practical 8: Performance Optimization and Lazy Loading in React
 
