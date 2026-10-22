@@ -4,11 +4,11 @@ process.env.ADMIN_EMAIL = 'admin-role@example.com'
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import mongoose from 'mongoose'
+import { taskCache } from './cache.js'
 
 const { createApp } = await import('./server.js')
 
-async function startServer() {
-  const app = createApp()
+async function startServer(app = createApp()) {
   const server = app.listen(0, '127.0.0.1')
 
   await new Promise((resolve, reject) => {
@@ -47,6 +47,22 @@ async function getAuthToken(baseUrl, email = 'task-user@example.com', password =
   return body.token
 }
 
+async function waitForTaskEvents(baseUrl, headers, minimumEmitted) {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const response = await fetch(`${baseUrl}/debug/events`, { headers })
+    const events = await response.json()
+    assert.equal(response.status, 200)
+
+    if (events.emitted >= minimumEmitted && events.pending === 0) {
+      return events
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 50))
+  }
+
+  throw new Error('Task event processing did not finish in time')
+}
+
 test.after(async () => {
   await mongoose.disconnect()
 })
@@ -59,7 +75,7 @@ test('GET /tasks returns the initial task list', async () => {
     const response = await fetch(`${baseUrl}/tasks`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-    assert.equal(response.status, 200)
+    assert.equal(response.status, 201)
 
     const body = await response.json()
     assert.ok(Array.isArray(body.tasks))
@@ -69,18 +85,133 @@ test('GET /tasks returns the initial task list', async () => {
   }
 })
 
+test('task responses are cached and writes invalidate list and detail entries', async () => {
+  const { server, baseUrl } = await startServer()
+  const { server: uncachedServer, baseUrl: uncachedBaseUrl } = await startServer(createApp({ cacheEnabled: false }))
+  const token = await getAuthToken(baseUrl, 'cache-task@example.com')
+  const headers = { Authorization: `Bearer ${token}` }
+  taskCache.flushAll()
+
+  try {
+    const uncachedResponse = await fetch(`${uncachedBaseUrl}/tasks`, { headers })
+    assert.equal(uncachedResponse.status, 200)
+    assert.equal((await uncachedResponse.json()).cacheStatus, 'DISABLED')
+
+    const firstListResponse = await fetch(`${baseUrl}/tasks`, { headers })
+    const firstList = await firstListResponse.json()
+    assert.equal(firstListResponse.status, 200)
+    assert.equal(firstList.cacheStatus, 'MISS')
+
+    const cachedListResponse = await fetch(`${baseUrl}/tasks`, { headers })
+    const cachedList = await cachedListResponse.json()
+    assert.equal(cachedListResponse.status, 200)
+    assert.equal(cachedList.cacheStatus, 'HIT')
+
+    const createResponse = await fetch(`${baseUrl}/tasks`, {
+      method: 'POST',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: 'Cache invalidation task' }),
+    })
+    const created = await createResponse.json()
+    assert.equal(createResponse.status, 201)
+
+    const refreshedListResponse = await fetch(`${baseUrl}/tasks`, { headers })
+    const refreshedList = await refreshedListResponse.json()
+    assert.equal(refreshedList.cacheStatus, 'MISS')
+    assert.ok(refreshedList.tasks.some((task) => task.id === created.task.id))
+
+    const taskUrl = `${baseUrl}/tasks/${created.task.id}`
+    const firstDetailResponse = await fetch(taskUrl, { headers })
+    assert.equal((await firstDetailResponse.json()).cacheStatus, 'MISS')
+
+    const cachedDetailResponse = await fetch(taskUrl, { headers })
+    assert.equal((await cachedDetailResponse.json()).cacheStatus, 'HIT')
+
+    const updateResponse = await fetch(taskUrl, {
+      method: 'PUT',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: 'Updated cache task' }),
+    })
+    assert.equal(updateResponse.status, 200)
+
+    const updatedDetailResponse = await fetch(taskUrl, { headers })
+    const updatedDetail = await updatedDetailResponse.json()
+    assert.equal(updatedDetail.cacheStatus, 'MISS')
+    assert.equal(updatedDetail.task.title, 'Updated cache task')
+
+    const updatedListResponse = await fetch(`${baseUrl}/tasks`, { headers })
+    const updatedList = await updatedListResponse.json()
+    assert.equal(updatedList.cacheStatus, 'MISS')
+    assert.ok(updatedList.tasks.some((task) => task.title === 'Updated cache task'))
+
+    const deleteResponse = await fetch(taskUrl, { method: 'DELETE', headers })
+    assert.equal(deleteResponse.status, 200)
+
+    const deletedDetailResponse = await fetch(taskUrl, { headers })
+    assert.equal(deletedDetailResponse.status, 404)
+
+    const deletedListResponse = await fetch(`${baseUrl}/tasks`, { headers })
+    const deletedList = await deletedListResponse.json()
+    assert.equal(deletedList.cacheStatus, 'MISS')
+    assert.equal(deletedList.tasks.some((task) => task.id === created.task.id), false)
+
+    const debugResponse = await fetch(`${baseUrl}/debug/cache`, { headers })
+    const diagnostics = await debugResponse.json()
+    assert.equal(debugResponse.status, 200)
+    assert.ok(diagnostics.hits >= 2)
+    assert.ok(diagnostics.misses >= 4)
+    assert.equal('activeKeys' in diagnostics, false)
+  } finally {
+    taskCache.flushAll()
+    await Promise.all([
+      new Promise((resolve) => server.close(resolve)),
+      new Promise((resolve) => uncachedServer.close(resolve)),
+    ])
+  }
+})
+
+test('task creation publishes an event for asynchronous processing', async () => {
+  const { server, baseUrl } = await startServer()
+  const token = await getAuthToken(baseUrl, 'event-task@example.com')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const beforeResponse = await fetch(`${baseUrl}/debug/events`, { headers })
+    const before = await beforeResponse.json()
+    assert.equal(beforeResponse.status, 200)
+
+    const createResponse = await fetch(`${baseUrl}/tasks`, {
+      method: 'POST',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: 'Event-driven practical test' }),
+    })
+    assert.equal(createResponse.status, 201)
+
+    const events = await waitForTaskEvents(baseUrl, headers, before.emitted + 1)
+    assert.equal(events.event, 'task:created')
+    assert.equal(events.emitted, before.emitted + 1)
+    assert.ok(events.pending + events.processed - before.processed + events.failed - before.failed >= 1)
+  } finally {
+    await new Promise((resolve) => server.close(resolve))
+  }
+})
+
 test('GET /task-history only returns task events for the signed-in user', async () => {
   const { server, baseUrl } = await startServer()
   const ownerToken = await getAuthToken(baseUrl, 'history-owner@example.com')
   const otherUserToken = await getAuthToken(baseUrl, 'history-other@example.com')
+  const ownerHeaders = { Authorization: `Bearer ${ownerToken}` }
 
   try {
+    const beforeEventsResponse = await fetch(`${baseUrl}/debug/events`, { headers: ownerHeaders })
+    const beforeEvents = await beforeEventsResponse.json()
     const createResponse = await fetch(`${baseUrl}/tasks`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${ownerToken}` },
       body: JSON.stringify({ title: 'Report task history', status: 'pending' }),
     })
     assert.equal(createResponse.status, 201)
+    await waitForTaskEvents(baseUrl, ownerHeaders, beforeEvents.emitted + 1)
 
     const updateProfileResponse = await fetch(`${baseUrl}/me`, {
       method: 'PUT',
