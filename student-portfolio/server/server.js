@@ -10,6 +10,21 @@ import { readFile, writeFile } from 'node:fs/promises'
 import { createHash, randomBytes, randomInt } from 'node:crypto'
 import { pathToFileURL } from 'node:url'
 import { OAuth2Client } from 'google-auth-library'
+import {
+  taskCache,
+  getAllTasksCacheKey,
+  getSingleTaskCacheKey,
+  invalidateUserTaskCache,
+  recordCacheHit,
+  recordCacheMiss,
+  getCacheDiagnostics,
+} from './cache.js'
+import {
+  emitTaskCreated,
+  TASK_CREATED_EVENT,
+  taskEventEmitter,
+  taskEventMetrics,
+} from './task-events.js'
 
 dotenv.config()
 
@@ -282,6 +297,22 @@ async function createTask(ownerId, title, status = 'pending') {
 
   memoryTasks.push(task)
   return { ...task }
+}
+
+async function findTask(ownerId, taskId) {
+  await connectToMongo()
+
+  if (mongoReady) {
+    if (!mongoose.isValidObjectId(taskId)) {
+      return null
+    }
+
+    const task = await TaskModel.findOne({ _id: taskId, ownerId }).lean()
+    return task ? normalizeTask(task) : null
+  }
+
+  const task = memoryTasks.find((item) => String(item.id) === String(taskId) && String(item.ownerId) === String(ownerId))
+  return task ? { ...task } : null
 }
 
 async function updateTask(ownerId, taskId, updates) {
@@ -567,6 +598,23 @@ async function notifyAdminActivity(activity) {
     })
 }
 
+taskEventEmitter.on(TASK_CREATED_EVENT, (activity) => {
+    taskEventMetrics.pending += 1
+    console.info(`[event] ${TASK_CREATED_EVENT} received`)
+
+    void notifyAdminActivity(activity)
+      .then(() => {
+        taskEventMetrics.processed += 1
+      })
+      .catch((error) => {
+        taskEventMetrics.failed += 1
+        console.error(`Unable to process ${TASK_CREATED_EVENT} event:`, error)
+      })
+      .finally(() => {
+        taskEventMetrics.pending -= 1
+      })
+})
+
 async function verifyEmailConfiguration() {
   if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
     console.warn('Admin email notifications disabled: SMTP configuration is incomplete')
@@ -766,7 +814,7 @@ function adminMiddleware(req, res, next) {
   next()
 }
 
-function createApp() {
+function createApp({ cacheEnabled = true } = {}) {
   const app = express()
 
   app.use(cors())
@@ -1048,15 +1096,65 @@ function createApp() {
 
   app.use(['/tasks', '/api/todos'], authMiddleware)
 
+  // ── Practical 9: GET /tasks with in-memory caching ────────────────────
+  // Cache check → HIT returns cached data immediately; MISS queries MongoDB,
+  // stores the result in cache with 60s TTL, then returns data.
   app.get(['/tasks', '/api/todos'], async (req, res) => {
+    if (!cacheEnabled) {
+      const tasks = await listTasks(req.user.id)
+      return res.status(200).json({ tasks, cacheStatus: 'DISABLED' })
+    }
+
+    const cacheKey = getAllTasksCacheKey(req.user.id)
+    const cached = taskCache.get(cacheKey)
+
+    if (cached) {
+      recordCacheHit()
+      return res.status(200).json({ tasks: cached, cacheStatus: 'HIT' })
+    }
+
+    recordCacheMiss()
     const tasks = await listTasks(req.user.id)
-    res.status(200).json({ tasks })
+    taskCache.set(cacheKey, tasks)
+    res.status(200).json({ tasks, cacheStatus: 'MISS' })
   })
 
+  // ── Supplementary Problem 1: GET /tasks/:id with per-task caching ─────
+  app.get(['/tasks/:id', '/api/todos/:id'], async (req, res) => {
+    if (!cacheEnabled) {
+      const task = await findTask(req.user.id, req.params.id)
+      if (!task) {
+        return res.status(404).json({ error: 'Task not found' })
+      }
+      return res.status(200).json({ task, cacheStatus: 'DISABLED' })
+    }
+
+    const cacheKey = getSingleTaskCacheKey(req.user.id, req.params.id)
+    const cached = taskCache.get(cacheKey)
+
+    if (cached) {
+      recordCacheHit()
+      return res.status(200).json({ task: cached, cacheStatus: 'HIT' })
+    }
+
+    recordCacheMiss()
+    const task = await findTask(req.user.id, req.params.id)
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found' })
+    }
+    taskCache.set(cacheKey, task)
+    res.status(200).json({ task, cacheStatus: 'MISS' })
+  })
+
+  // ── POST /tasks with cache invalidation ───────────────────────────────
   app.post(['/tasks', '/api/todos'], validateTaskInput, async (req, res) => {
     const { title, status = 'pending', completed = false } = req.body || {}
     const task = await createTask(req.user.id, String(title).trim(), status || (completed ? 'completed' : 'pending'))
-    await notifyAdminActivity({
+
+    // Invalidate the all-tasks cache so stale data is never served
+    invalidateUserTaskCache(req.user.id)
+
+    emitTaskCreated({
       event: 'task created',
       userEmail: req.user.email,
       userId: req.user.id,
@@ -1065,6 +1163,7 @@ function createApp() {
     res.status(201).json({ message: 'Task created', task })
   })
 
+  // ── PUT /tasks/:id with cache invalidation ────────────────────────────
   app.put(['/tasks/:id', '/api/todos/:id'], validateTaskInput, async (req, res) => {
     const { title, completed, status } = req.body || {}
     const updates = {}
@@ -1087,6 +1186,9 @@ function createApp() {
       return res.status(404).json({ error: 'Task not found' })
     }
 
+    // Invalidate both all-tasks and single-task cache entries
+    invalidateUserTaskCache(req.user.id, req.params.id)
+
     const { task, previousStatus } = updateResult
     const requestedStatus = status !== undefined ? status : completed !== undefined ? (completed ? 'completed' : 'pending') : null
     if (requestedStatus && requestedStatus !== previousStatus) {
@@ -1108,11 +1210,15 @@ function createApp() {
     res.status(200).json({ message: 'Task updated', task })
   })
 
+  // ── DELETE /tasks/:id with cache invalidation ─────────────────────────
   app.delete(['/tasks/:id', '/api/todos/:id'], async (req, res) => {
     const deleted = await deleteTask(req.user.id, req.params.id)
     if (!deleted) {
       return res.status(404).json({ error: 'Task not found' })
     }
+
+    // Invalidate both all-tasks and single-task cache entries
+    invalidateUserTaskCache(req.user.id, req.params.id)
 
     await notifyAdminActivity({
       event: 'task deleted',
@@ -1122,6 +1228,18 @@ function createApp() {
     })
 
     res.status(200).json({ message: 'Task deleted', deleted: true })
+  })
+
+  // ── Supplementary Problem 2: Debug cache metrics endpoint ─────────────
+  app.get('/debug/cache', authMiddleware, (req, res) => {
+    res.status(200).json(getCacheDiagnostics())
+  })
+
+  app.get('/debug/events', authMiddleware, (req, res) => {
+    res.status(200).json({
+      event: TASK_CREATED_EVENT,
+      ...taskEventMetrics,
+    })
   })
 
   app.use((req, res) => {
